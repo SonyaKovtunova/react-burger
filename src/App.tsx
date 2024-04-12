@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import './App.css';
 import AppHeader from './components/app-header/app-header';
+import BurgerConstructor from './components/burger-constructor/burger-constructor';
 import BurgerIngridients from './components/burger-ingridients/burger-ingridients';
 import { ICategory } from './interfaces/category-interface';
 
 function App() {
-  const data = [
+   const data = [
     {
        "_id":"60666c42cc7b410027a1a9b1",
        "name":"Краторная булка N-200i",
@@ -217,6 +219,26 @@ function App() {
     }
    ];
 
+   const [selectedIngridient, setSelectedIngridient] = useState([
+      {
+         ingridient: {
+            "_id":"60666c42cc7b410027a1a9b1",
+            "name":"Краторная булка N-200i",
+            "type":"bun",
+            "proteins":80,
+            "fat":24,
+            "carbohydrates":53,
+            "calories":420,
+            "price":1255,
+            "image":"https://code.s3.yandex.net/react/code/bun-02.png",
+            "image_mobile":"https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+            "image_large":"https://code.s3.yandex.net/react/code/bun-02-large.png",
+            "__v":0
+         },
+         count: 1,
+      }
+   ]);
+
    const groupBy = (items: any[]): ICategory[] => items.reduce(
       (result: ICategory[], item) => {
          if (result.length === 0 || !result.find(x => x.type === item.type)) {
@@ -246,7 +268,9 @@ function App() {
             <div>
                <BurgerIngridients categories={categoryGroups} />
             </div>
-            <div>тест</div>
+            <div>
+               <BurgerConstructor selectedIngridient={selectedIngridient} />
+            </div>
          </main>
       </div>
    );

@@ -1,0 +1,18 @@
+.burgerConstructor {
+    padding: 116px 36px 0;
+}
+
+.orderWrapper {
+    display: grid;
+    grid-template-columns: calc(33% - 25px) calc(33% - 25px) calc(33% - 25px);
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.sumWrapper {
+    place-self: center center;
+}
+
+.buttonWrapper {
+    place-self: center end;
+}
