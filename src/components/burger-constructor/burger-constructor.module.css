@@ -19,7 +19,8 @@
 
 .list {
     overflow-y: auto;
-    max-height: calc(100vh - 491px);
+    overflow-x: hidden;
+    max-height: calc(100vh - 441px);
     display: flex;
     flex-direction: column;
     gap: 16px;

@@ -1,7 +1,20 @@
 .header {
     display: grid;
     grid-template-columns: 33% 33% 33%;
-    padding: 56px 360px 16px;
+    padding: 24px 320px;
+    background-color: #1C1C21;
+
+    @media screen and (max-width : 1440px) {
+        padding: 24px 120px;
+    }
+
+    @media screen and (max-width : 1024px) {
+        padding: 12px;
+    }
+    
+    @media screen and (max-width : 800px) {
+        padding: 4px;
+    }
 }
 
 .nav {
