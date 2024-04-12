@@ -13,11 +13,13 @@ const BurgerConstructor = (props: IBurgerConstructorProps) => {
 
     return (
         <div className={burgerConstructorStyles.burgerConstructor}>
-            {
-                props.selectedIngridient.map((selectedIngridient, index) => {
-                    return <BurgerConstructorItem ingridient={selectedIngridient.ingridient} />
-                })
-            }
+            <div className={burgerConstructorStyles.list}>
+                {
+                    props.selectedIngridient.map((selectedIngridient, index) => {
+                        return <BurgerConstructorItem ingridient={selectedIngridient.ingridient} />
+                    })
+                }    
+            </div>
             <div className={burgerConstructorStyles.orderWrapper}>
                 <div></div>
                 <div className={burgerConstructorStyles.sumWrapper}>

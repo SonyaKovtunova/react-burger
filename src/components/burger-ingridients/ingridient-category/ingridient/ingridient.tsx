@@ -11,7 +11,7 @@ const Ingridient = (props: IIngridientProps) => {
         <div className={ingridientStyles.ingridient}>
             <img className={ingridientStyles.imageWrapper} src={props.ingridient.image}/>
             <p className="text text_type_main-default mt-1">{props.ingridient.price} <CurrencyIcon type="primary" /></p>
-            <p className="text text_type_main-default mt-1">{props.ingridient.name}</p>
+            <p className={`text text_type_main-default mt-1 ${ingridientStyles.textCenter}`}>{props.ingridient.name}</p>
         </div>
     );
 }

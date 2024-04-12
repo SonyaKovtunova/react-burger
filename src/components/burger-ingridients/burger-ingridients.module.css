@@ -2,3 +2,8 @@
     display: grid;
     grid-template-columns: 33% 33% 33%;
 }
+
+.list {
+    overflow-y: auto;
+    height: calc(100vh - 335px);
+}

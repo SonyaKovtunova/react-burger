@@ -16,3 +16,11 @@
 .buttonWrapper {
     place-self: center end;
 }
+
+.list {
+    overflow-y: auto;
+    max-height: calc(100vh - 491px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}

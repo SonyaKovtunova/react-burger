@@ -43,13 +43,14 @@ const BurgerIngridients = (props: IBurgerIngridientsProps) => {
                     })
                 }
             </div>
-            <>
+
+            <div className={burgerIngridientsStyles.list}>
                 {
                     props.categories.map((category, index) => {
                         return <IngridientCategory category={category} key={index} />;
                     })
                 }
-            </>
+            </div>
         </>
     );
 }
