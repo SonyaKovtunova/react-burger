@@ -1,0 +1,9 @@
+.ingridient {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.imageWrapper {
+    padding: 0 16px;
+}
