@@ -4,8 +4,12 @@
     padding: 24px 320px;
     background-color: #1C1C21;
 
-    @media screen and (max-width : 1440px) {
+    @media screen and (max-width : 1870px) {
         padding: 24px 120px;
+    }
+
+    @media screen and (max-width : 1470px) {
+        padding: 24px 40px;
     }
 
     @media screen and (max-width : 1024px) {

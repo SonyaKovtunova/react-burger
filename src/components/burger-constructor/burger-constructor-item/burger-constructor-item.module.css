@@ -2,12 +2,5 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-.burgerConstructorElementWrapper {
-    width: calc(100% - 32px);
-}
-
-.burgerConstructorElement {
-    max-width: none !important;
+    gap: 8px;
 }

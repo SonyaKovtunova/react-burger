@@ -10,14 +10,11 @@ const BurgerConstructorItem = (props: IBurgerConstructorItemProps) => {
     return (
         <div className={burgerConstructorItemStyles.item}>
             <DragIcon type="primary" />
-            <div className={burgerConstructorItemStyles.burgerConstructorElementWrapper}>
-                <ConstructorElement 
-                    text={props.ingridient.name} 
-                    price={props.ingridient.price} 
-                    thumbnail={props.ingridient.image} 
-                    extraClass={burgerConstructorItemStyles.burgerConstructorElement}
-                />    
-            </div>
+            <ConstructorElement 
+                text={props.ingridient.name} 
+                price={props.ingridient.price} 
+                thumbnail={props.ingridient.image} 
+            />   
         </div>
     );
 }
