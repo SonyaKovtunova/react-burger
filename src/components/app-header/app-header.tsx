@@ -9,13 +9,13 @@ class AppHeader extends React.Component {
                 <nav className={appHeaderStyles.nav}>
                     <button className={appHeaderStyles.button}>
                         <BurgerIcon type="primary" />
-                        <p className="text text_type_main-medium ml-2">
+                        <p className="text text_type_main-default  ml-2">
                             Конструктор
                         </p>
                     </button>
                     <button className={appHeaderStyles.button}>
                         <ListIcon type="secondary" />
-                        <p className="text text_type_main-medium text_color_inactive">
+                        <p className="text text_type_main-default text_color_inactive">
                             Лента заказов
                         </p>
                     </button>
@@ -26,7 +26,7 @@ class AppHeader extends React.Component {
                 <div className={appHeaderStyles.profileButton}>
                     <button className={appHeaderStyles.button}>
                         <ProfileIcon type="secondary" />
-                        <p className="text text_type_main-medium text_color_inactive">
+                        <p className="text text_type_main-default text_color_inactive">
                             Личный кабинет
                         </p>
                     </button>    
