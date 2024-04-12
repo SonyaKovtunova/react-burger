@@ -1,6 +1,6 @@
-import { IIngridient } from "./ingridient-interface";
+import { ISelectedIngridient } from "./selected-ingridient-interface";
 
 export interface ICategory {
     type: string,
-    ingridients: IIngridient[],
+    ingridients: ISelectedIngridient[],
 }

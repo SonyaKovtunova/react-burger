@@ -235,6 +235,7 @@ function App() {
             "image_large":"https://code.s3.yandex.net/react/code/bun-02-large.png",
             "__v":0
          },
+         isSelected: true,
          count: 1,
       }
    ]);
@@ -251,7 +252,7 @@ function App() {
          const category = result.find(x => x.type === item.type);
 
          if (category) {
-            category.ingridients.push(item);
+            category.ingridients.push({ ingridient: item, isSelected: false, count: 0 });
          }
 
          return result;
