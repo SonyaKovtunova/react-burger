@@ -1,9 +1,9 @@
 import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { IIngridient } from "../../../interfaces/ingridient-interface";
 import burgerConstructorItemStyles from './burger-constructor-item.module.css';
+import { IIngridientData } from "../../../interfaces/selected-ingridient-interface";
 
 interface IBurgerConstructorItemProps {
-    ingridient: IIngridient
+    ingridient: IIngridientData
 }
 
 const BurgerConstructorItem = (props: IBurgerConstructorItemProps) => {

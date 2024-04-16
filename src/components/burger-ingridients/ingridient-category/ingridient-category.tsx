@@ -1,9 +1,9 @@
-import { ICategory } from "../../../interfaces/category-interface";
+import { ICategoryData } from '../../../interfaces/category-interface';
 import ingridientCategoryStyles from './ingridient-category.module.css';
 import Ingridient from "./ingridient/ingridient";
 
 interface IIngridientCategoryProps {
-    category: ICategory
+    category: ICategoryData
 }
 
 const IngridientCategory = (props: IIngridientCategoryProps) => {

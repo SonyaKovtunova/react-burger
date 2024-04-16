@@ -1,47 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import AppHeader from './components/app-header/app-header';
 import BurgerConstructor from './components/burger-constructor/burger-constructor';
 import BurgerIngridients from './components/burger-ingridients/burger-ingridients';
-import { ICategory } from './interfaces/category-interface';
-import { IIngridient } from './interfaces/ingridient-interface';
-import { data } from './data';
-import { selectedData } from './selected-data';
+import { IIngridientsResponse } from './interfaces/ingridients-response';
+import { IIngridientData } from './interfaces/selected-ingridient-interface';
+
+const URL: string = 'https://norma.nomoreparties.space/api/ingredients';
+
+const useIngridientsFetch = () => {
+   const [ ingridients, setIngridients ] = useState<IIngridientData[]>([]);
+
+   useEffect(() => {
+      const getIngridients = async () => {
+         const response = await fetch(URL);
+         
+         if (response.ok) {
+            const data = (await response.json()) as IIngridientsResponse;
+
+            if (data.success) {
+               setIngridients(data.data.map(item => item as IIngridientData));
+            }
+         }
+      }
+
+      getIngridients();
+   }, []);
+
+   return [ ingridients ];
+}
 
 function App() {
-   const [selectedIngridient, setSelectedIngridient] = useState(selectedData);
-
-   const groupBy = (items: IIngridient[]): ICategory[] => items.reduce(
-      (result: ICategory[], item) => {
-         if (result.length === 0 || !result.find(x => x.type === item.type)) {
-            result.push({
-               type: item.type,
-               ingridients: []
-            });
-         }
-         
-         const category = result.find(x => x.type === item.type);
-
-         if (category) {
-            category.ingridients.push({ ingridient: item, isSelected: false, count: 0 });
-         }
-
-         return result;
-      }, 
-      [],
-   );
-
-   const categoryGroups = groupBy(data);
+   const [ ingridients ] = useIngridientsFetch();
 
    return (
       <div className="App">
          <AppHeader />
          <main className='main'>
             <div className='burgerIngridients-wrapper'>
-               <BurgerIngridients categories={categoryGroups} />
+               <BurgerIngridients ingridients={ingridients} />
             </div>
             <div className='burgerConstructor-wrapper'>
-               <BurgerConstructor selectedIngridient={selectedIngridient} />
+               <BurgerConstructor selectedIngridient={ingridients} />
             </div>
          </main>
       </div>

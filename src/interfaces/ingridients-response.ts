@@ -1,4 +1,9 @@
-export interface IIngridient {
+export interface IIngridientsResponse {
+    success: boolean,
+    data: IIngridientResponse[]
+}
+
+export interface IIngridientResponse {
     _id: string,
     name: string,
     proteins: number,

@@ -1,7 +1,6 @@
-import { IIngridient } from "./ingridient-interface";
+import { IIngridientResponse } from "./ingridients-response";
 
-export interface ISelectedIngridient {
-    ingridient: IIngridient,
+export interface IIngridientData extends IIngridientResponse {
     count: number,
     isSelected: boolean,
 }
