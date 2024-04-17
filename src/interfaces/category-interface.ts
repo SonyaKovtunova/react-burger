@@ -1,6 +1,6 @@
-import { IIngridientData } from "./selected-ingridient-interface";
+import { IIngredientData } from "./selected-ingredient-interface";
 
 export interface ICategoryData {
     type: string,
-    ingridients: IIngridientData[],
+    ingredients: IIngredientData[],
 }

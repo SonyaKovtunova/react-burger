@@ -1,12 +1,12 @@
 import { ICategoryData } from '../../../interfaces/category-interface';
-import ingridientCategoryStyles from './ingridient-category.module.css';
-import Ingridient from "./ingridient/ingridient";
+import ingredientCategoryStyles from './ingredient-category.module.css';
+import Ingredient from "./ingredient/ingredient";
 
-interface IIngridientCategoryProps {
+interface IIngredientCategoryProps {
     category: ICategoryData
 }
 
-const IngridientCategory = (props: IIngridientCategoryProps) => {
+const IngredientCategory = (props: IIngredientCategoryProps) => {
     return (
         <>
             <p className="text text_type_main-medium mt-10">
@@ -17,11 +17,11 @@ const IngridientCategory = (props: IIngridientCategoryProps) => {
                         : 'Начинки'
                 }
             </p>
-            <div className={ingridientCategoryStyles.ingridients}>
+            <div className={ingredientCategoryStyles.ingredients}>
                 {
-                    props.category.ingridients.map((ingridient, index) => {
-                        return <div key={index} className={ingridientCategoryStyles.ingridient}>
-                                <Ingridient ingridient={ingridient} />
+                    props.category.ingredients.map((ingredient, index) => {
+                        return <div key={index} className={ingredientCategoryStyles.ingredient}>
+                                <Ingredient ingredient={ingredient} />
                             </div>;
                     })
                 }    
@@ -30,4 +30,4 @@ const IngridientCategory = (props: IIngridientCategoryProps) => {
     );
 }
   
-export default IngridientCategory; 
+export default IngredientCategory; 

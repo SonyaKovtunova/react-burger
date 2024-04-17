@@ -29,7 +29,7 @@ body {
     }
 }
 
-.burgerIngridients-wrapper {
+.burgerIngredients-wrapper {
     min-width: 600px;
     
     @media screen and (max-width : 624px) {

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import IngridientCategory from "./ingridient-category/ingridient-category";
+import IngredientCategory from "./ingredient-category/ingredient-category";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import burgerIngridientsStyles from './burger-ingridients.module.css';
-import { IIngridientData } from "../../interfaces/selected-ingridient-interface";
+import burgerIngredientsStyles from './burger-ingredients.module.css';
+import { IIngredientData } from "../../interfaces/selected-ingredient-interface";
 import { ICategoryData } from "../../interfaces/category-interface";
 
-interface IBurgerIngridientsProps {
-    ingridients: IIngridientData[],
+interface IBurgerIngredientsProps {
+    ingredients: IIngredientData[],
 }
 
 const CATEGORIES = [
@@ -24,25 +24,25 @@ const CATEGORIES = [
     }
 ];
 
-const BurgerIngridients = (props: IBurgerIngridientsProps) => {
+const BurgerIngredients = (props: IBurgerIngredientsProps) => {
 
     const [ activeCategoryType, setActiveCategoryType ] = useState('bun');
     const [ categories, setCategories ] = useState<ICategoryData[]>([]);
 
     useEffect(() => {
-        const groupBy = (items: IIngridientData[]): ICategoryData[] => items.reduce(
+        const groupBy = (items: IIngredientData[]): ICategoryData[] => items.reduce(
             (result: ICategoryData[], item) => {
             if (result.length === 0 || !result.find(x => x.type === item.type)) {
                 result.push({
                     type: item.type,
-                    ingridients: []
+                    ingredients: []
                 });
             }
             
             const category = result.find(x => x.type === item.type);
     
             if (category) {
-                category.ingridients.push(item);
+                category.ingredients.push(item);
             }
     
             return result;
@@ -50,12 +50,12 @@ const BurgerIngridients = (props: IBurgerIngridientsProps) => {
             [],
         );    
      
-        setCategories(groupBy(props.ingridients));
-    }, [props.ingridients]);
+        setCategories(groupBy(props.ingredients));
+    }, [props.ingredients]);
 
 
     const getTabs = useCallback(() => {
-        return (<div className={burgerIngridientsStyles.tabs}>
+        return (<div className={burgerIngredientsStyles.tabs}>
             {
                 CATEGORIES.map((category, index) => {
                     return <Tab 
@@ -74,10 +74,10 @@ const BurgerIngridients = (props: IBurgerIngridientsProps) => {
         <>
             <p className="text text_type_main-large mb-5">Соберите бургер</p>
             { getTabs() }
-            <div className={burgerIngridientsStyles.list}>
+            <div className={burgerIngredientsStyles.list}>
                 {
                     categories.map((category, index) => {
-                        return <IngridientCategory category={category} key={index} />;
+                        return <IngredientCategory category={category} key={index} />;
                     })
                 }
             </div>
@@ -85,4 +85,4 @@ const BurgerIngridients = (props: IBurgerIngridientsProps) => {
     );
 }
   
-export default BurgerIngridients; 
+export default BurgerIngredients; 

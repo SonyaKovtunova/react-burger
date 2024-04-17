@@ -1,6 +1,6 @@
-import { IIngridientData } from "./interfaces/selected-ingridient-interface";
+import { IIngredientData } from "./interfaces/selected-ingredient-interface";
 
-export const data: IIngridientData[] = [
+export const data: IIngredientData[] = [
       {
          "_id":"60666c42cc7b410027a1a9b1",
          "name":"Краторная булка N-200i",
