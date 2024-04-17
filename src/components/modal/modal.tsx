@@ -9,7 +9,7 @@ const modalRoot = document.getElementById("react-modals");
 interface IModalProps {
     title: string | null,
     onClose: any,
-    children?: ReactElement[],
+    children?: ReactElement[] | ReactElement,
 }
 
 const Modal = (props: IModalProps) => {

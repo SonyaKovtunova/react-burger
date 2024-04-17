@@ -3,7 +3,6 @@ import modalOverlayStyles from './modal-overlay.module.css';
 
 interface IModalOverlayProps {
     onClose: any,
-    children?: ReactElement[] | ReactElement,
 }
 
 const ModalOverlay = (props: IModalOverlayProps) => {
@@ -25,9 +24,7 @@ const ModalOverlay = (props: IModalOverlayProps) => {
     }
 
     return (
-        <div className={modalOverlayStyles.modalOverlay} onClick={props.onClose}>
-            {props.children}
-        </div>
+        <div className={modalOverlayStyles.modalOverlay} onClick={props.onClose}></div>
     );
 } 
 

@@ -1,0 +1,23 @@
+.bodyWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image {
+    min-height: 240px;
+}
+
+.nutritionValues {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.nutritionValue {
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

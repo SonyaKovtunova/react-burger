@@ -4,6 +4,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { IIngredientData } from "../../interfaces/selected-ingredient-interface";
 import { ICategoryData } from "../../interfaces/category-interface";
+import IngredientDetails from "./ingredient-details/ingredient-details";
 
 interface IBurgerIngredientsProps {
     ingredients: IIngredientData[],
@@ -28,6 +29,8 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
 
     const [ activeCategoryType, setActiveCategoryType ] = useState('bun');
     const [ categories, setCategories ] = useState<ICategoryData[]>([]);
+    const [ modalIsVisible, setModalIsVisible ] = useState(false);
+    const [ ingredientToShow, setIngredientToShow ] = useState<IIngredientData>();
 
     useEffect(() => {
         const groupBy = (items: IIngredientData[]): ICategoryData[] => items.reduce(
@@ -53,7 +56,6 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
         setCategories(groupBy(props.ingredients));
     }, [props.ingredients]);
 
-
     const getTabs = useCallback(() => {
         return (<div className={burgerIngredientsStyles.tabs}>
             {
@@ -70,6 +72,15 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
         </div>);
     }, [activeCategoryType]);
 
+    const openModal = useCallback(() => {
+        setModalIsVisible(true);
+    }, []);
+
+    const closeModal = useCallback(() => {
+        setModalIsVisible(false);
+        setIngredientToShow(undefined);
+    }, [ingredientToShow]);
+
     return (
         <>
             <p className="text text_type_main-large mb-5">Соберите бургер</p>
@@ -77,10 +88,13 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
             <div className={burgerIngredientsStyles.list}>
                 {
                     categories.map((category, index) => {
-                        return <IngredientCategory category={category} key={index} />;
+                        return <IngredientCategory category={category} key={index} openModal={openModal} selectIngredientToShow={setIngredientToShow} />;
                     })
                 }
             </div>
+            { modalIsVisible && ingredientToShow &&
+                <IngredientDetails ingredient={ingredientToShow} onClose={closeModal} />
+            }
         </>
     );
 }

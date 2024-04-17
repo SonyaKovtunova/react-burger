@@ -1,9 +1,13 @@
+import { Dispatch, SetStateAction } from 'react';
 import { ICategoryData } from '../../../interfaces/category-interface';
 import ingredientCategoryStyles from './ingredient-category.module.css';
 import Ingredient from "./ingredient/ingredient";
+import { IIngredientData } from '../../../interfaces/selected-ingredient-interface';
 
 interface IIngredientCategoryProps {
-    category: ICategoryData
+    category: ICategoryData,
+    openModal: () => void,
+    selectIngredientToShow: Dispatch<SetStateAction<IIngredientData | undefined>>,
 }
 
 const IngredientCategory = (props: IIngredientCategoryProps) => {
@@ -21,7 +25,7 @@ const IngredientCategory = (props: IIngredientCategoryProps) => {
                 {
                     props.category.ingredients.map((ingredient, index) => {
                         return <div key={index} className={ingredientCategoryStyles.ingredient}>
-                                <Ingredient ingredient={ingredient} />
+                                <Ingredient ingredient={ingredient} openModal={props.openModal} selectIngredientToShow={props.selectIngredientToShow} />
                             </div>;
                     })
                 }    
