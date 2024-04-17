@@ -3,6 +3,7 @@ import { ReactElement } from "react";
 import ReactDOM from "react-dom";
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
+import PropTypes from 'prop-types';
 
 const modalRoot = document.getElementById("react-modals");
 
@@ -35,5 +36,11 @@ const Modal = (props: IModalProps) => {
         modalRoot
     );
 } 
+  
+Modal.propTypes = {
+    title: PropTypes.string,
+    onClose: PropTypes.func.isRequired,
+    children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+};
 
 export default Modal; 

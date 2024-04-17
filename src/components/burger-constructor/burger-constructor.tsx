@@ -4,9 +4,10 @@ import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-co
 import { IIngredientData } from '../../interfaces/selected-ingredient-interface';
 import { useCallback, useState } from 'react';
 import OrderDetails from './order-details/order-details';
+import PropTypes from 'prop-types';
 
 interface IBurgerConstructorProps {
-    selectedIngredient: IIngredientData[]
+    ingredients: IIngredientData[],
 }
 
 const BurgerConstructor = (props: IBurgerConstructorProps) => {
@@ -20,15 +21,15 @@ const BurgerConstructor = (props: IBurgerConstructorProps) => {
         setModalIsVisible(false);
     }, []);
 
-    const sum = props.selectedIngredient.reduce((result, item) => result + (item.count ?? 0) * item.price, 0) ?? 0;
+    const sum = props.ingredients.reduce((result, item) => result + (item.count ?? 0) * item.price, 0) ?? 0;
 
     return (
         <> 
             <div className={burgerConstructorStyles.burgerConstructor}>
                 <div className={burgerConstructorStyles.list}>
                     {
-                        props.selectedIngredient.map((selectedIngredient, index) => {
-                            return <BurgerConstructorItem key={index} ingredient={selectedIngredient} />
+                        props.ingredients.map((ingredient, index) => {
+                            return <BurgerConstructorItem key={index} ingredient={ingredient} />
                         })
                     }    
                 </div>
@@ -52,5 +53,9 @@ const BurgerConstructor = (props: IBurgerConstructorProps) => {
        
     );
 }
+
+BurgerConstructor.propTypes = {
+    ingredients: PropTypes.arrayOf(PropTypes.object),
+};
   
 export default BurgerConstructor; 

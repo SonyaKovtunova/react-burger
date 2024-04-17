@@ -1,10 +1,11 @@
 import { IIngredientData } from "../../../interfaces/selected-ingredient-interface";
 import Modal from "../../modal/modal";
 import ingredientDetailsStyles from './ingredient-details.module.css';
+import PropTypes from 'prop-types';
 
 interface IIngredientDetailsProps {
     onClose: () => void,
-    ingredient: IIngredientData
+    ingredient: IIngredientData,
 }
 
 const IngredientDetails = (props: IIngredientDetailsProps) => {
@@ -36,5 +37,10 @@ const IngredientDetails = (props: IIngredientDetailsProps) => {
         </Modal>
     );
 }
+  
+IngredientDetails.propTypes = {
+    ingredient: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired,
+};
 
 export default IngredientDetails;

@@ -41,7 +41,7 @@ function App() {
                <BurgerIngredients ingredients={ingredients} />
             </div>
             <div className='burgerConstructor-wrapper'>
-               <BurgerConstructor selectedIngredient={ingredients} />
+               <BurgerConstructor ingredients={ingredients} />
             </div>
          </main>
       </div>

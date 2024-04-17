@@ -5,6 +5,7 @@ import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { IIngredientData } from "../../interfaces/selected-ingredient-interface";
 import { ICategoryData } from "../../interfaces/category-interface";
 import IngredientDetails from "./ingredient-details/ingredient-details";
+import PropTypes from 'prop-types';
 
 interface IBurgerIngredientsProps {
     ingredients: IIngredientData[],
@@ -98,5 +99,9 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
         </>
     );
 }
+
+BurgerIngredients.propTypes = {
+    ingredients: PropTypes.arrayOf(PropTypes.object),
+};
   
 export default BurgerIngredients; 

@@ -1,6 +1,7 @@
 import Modal from "../../modal/modal";
 import orderDetailsStyles from './order-details.module.css';
 import doneImg from '../../../img/done.png';
+import PropTypes from 'prop-types';
 
 interface IOrderDetailsProps {
     onClose: () => void,
@@ -19,5 +20,9 @@ const OrderDetails = (props: IOrderDetailsProps) => {
         </Modal>
     );
 }
+
+OrderDetails.propTypes = {
+    onClose: PropTypes.func.isRequired,
+};
 
 export default OrderDetails;

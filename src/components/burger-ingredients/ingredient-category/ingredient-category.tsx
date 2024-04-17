@@ -3,6 +3,7 @@ import { ICategoryData } from '../../../interfaces/category-interface';
 import ingredientCategoryStyles from './ingredient-category.module.css';
 import Ingredient from "./ingredient/ingredient";
 import { IIngredientData } from '../../../interfaces/selected-ingredient-interface';
+import PropTypes from 'prop-types';
 
 interface IIngredientCategoryProps {
     category: ICategoryData,
@@ -34,4 +35,10 @@ const IngredientCategory = (props: IIngredientCategoryProps) => {
     );
 }
   
+IngredientCategory.propTypes = {
+    category: PropTypes.object.isRequired,
+    openModal: PropTypes.func.isRequired,
+    selectIngredientToShow: PropTypes.func.isRequired,
+};
+
 export default IngredientCategory; 
