@@ -1,6 +1,6 @@
 import { IIngredientData } from "../../../interfaces/selected-ingredient-interface";
 import Modal from "../../modal/modal";
-import ingredientDetailsStyles from './ingrediaent-details.module.css';
+import ingredientDetailsStyles from './ingredient-details.module.css';
 
 interface IIngredientDetailsProps {
     onClose: () => void,
