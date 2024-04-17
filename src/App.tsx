@@ -21,6 +21,9 @@ const useIngredientsFetch = () => {
             if (data.success) {
                setIngredients(data.data.map(item => item as IIngredientData));
             }
+            else {
+               setIngredients([]);
+            }
          }
       }
 

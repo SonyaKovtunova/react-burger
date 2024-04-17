@@ -1,6 +1,6 @@
 import Modal from "../../modal/modal";
 import orderDetailsStyles from './order-details.module.css';
-import doneImg from '../../../img/done.png';
+import doneImg from '../../../images/done.png';
 import PropTypes from 'prop-types';
 
 interface IOrderDetailsProps {
