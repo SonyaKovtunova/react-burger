@@ -7,7 +7,7 @@ import modalStyles from './modal.module.css';
 const modalRoot = document.getElementById("react-modals");
 
 interface IModalProps {
-    title: string | null,
+    title?: string,
     onClose: () => void,
     children?: ReactElement[] | ReactElement,
 }
@@ -24,9 +24,7 @@ const Modal = (props: IModalProps) => {
                 <div className={modalStyles.modal}>
                     <div className={modalStyles.header}>
                         <p className="text text_type_main-large">{props.title}</p>
-                        <div>
-                            <CloseIcon type="primary" onClick={props.onClose} />
-                        </div>
+                        <CloseIcon type="primary" onClick={props.onClose} />
                     </div>
                     <>
                         {props.children}
