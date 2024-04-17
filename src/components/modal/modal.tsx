@@ -8,7 +8,7 @@ const modalRoot = document.getElementById("react-modals");
 
 interface IModalProps {
     title: string | null,
-    onClose: any,
+    onClose: () => void,
     children?: ReactElement[] | ReactElement,
 }
 

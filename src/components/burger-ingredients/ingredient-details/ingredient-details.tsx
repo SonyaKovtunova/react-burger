@@ -3,7 +3,7 @@ import Modal from "../../modal/modal";
 import ingredientDetailsStyles from './ingrediaent-details.module.css';
 
 interface IIngredientDetailsProps {
-    onClose: any,
+    onClose: () => void,
     ingredient: IIngredientData
 }
 

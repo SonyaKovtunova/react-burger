@@ -1,8 +1,8 @@
-import { ReactElement, useEffect } from "react";
+import { useEffect } from "react";
 import modalOverlayStyles from './modal-overlay.module.css';
 
 interface IModalOverlayProps {
-    onClose: any,
+    onClose: () => void,
 }
 
 const ModalOverlay = (props: IModalOverlayProps) => {
