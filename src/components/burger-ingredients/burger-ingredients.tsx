@@ -5,7 +5,7 @@ import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { IIngredientData } from "../../interfaces/selected-ingredient-interface";
 import { ICategoryData } from "../../interfaces/category-interface";
 import IngredientDetails from "./ingredient-details/ingredient-details";
-import PropTypes from 'prop-types';
+import Modal from "../modal/modal";
 
 interface IBurgerIngredientsProps {
     ingredients: IIngredientData[],
@@ -94,14 +94,12 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
                 }
             </div>
             { modalIsVisible && ingredientToShow &&
-                <IngredientDetails ingredient={ingredientToShow} onClose={closeModal} />
+                <Modal title='Детали ингредиента' onClose={closeModal}>
+                    <IngredientDetails ingredient={ingredientToShow} />
+                </Modal>
             }
         </>
     );
 }
-
-BurgerIngredients.propTypes = {
-    ingredients: PropTypes.arrayOf(PropTypes.object),
-};
   
 export default BurgerIngredients; 

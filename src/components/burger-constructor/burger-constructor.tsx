@@ -4,7 +4,7 @@ import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-co
 import { IIngredientData } from '../../interfaces/selected-ingredient-interface';
 import { useCallback, useState } from 'react';
 import OrderDetails from './order-details/order-details';
-import PropTypes from 'prop-types';
+import Modal from '../modal/modal';
 
 interface IBurgerConstructorProps {
     ingredients: IIngredientData[],
@@ -47,15 +47,13 @@ const BurgerConstructor = (props: IBurgerConstructorProps) => {
                 </div>
             </div>
             { modalIsVisible &&
-                <OrderDetails onClose={closeModal} />
+                <Modal onClose={closeModal}>
+                    <OrderDetails />
+                </Modal>
             }
         </>
        
     );
 }
-
-BurgerConstructor.propTypes = {
-    ingredients: PropTypes.arrayOf(PropTypes.object),
-};
   
 export default BurgerConstructor; 

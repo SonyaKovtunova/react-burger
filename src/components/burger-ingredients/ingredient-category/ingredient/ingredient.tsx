@@ -2,7 +2,6 @@ import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-c
 import ingredientStyles from './ingredient.module.css';
 import { IIngredientData } from "../../../../interfaces/selected-ingredient-interface";
 import { Dispatch, SetStateAction } from "react";
-import PropTypes from 'prop-types';
 
 interface IIngredientProps {
     ingredient: IIngredientData,
@@ -26,17 +25,5 @@ const Ingredient = (props: IIngredientProps) => {
         </div>
     );
 }
-
-Ingredient.propTypes = {
-    ingredient: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        image: PropTypes.string.isRequired,
-        isSelected: PropTypes.bool,
-        count: PropTypes.number,
-    }).isRequired,
-    openModal: PropTypes.func.isRequired,
-    selectIngredientToShow: PropTypes.func.isRequired,
-};
   
 export default Ingredient; 

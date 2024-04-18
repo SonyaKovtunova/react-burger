@@ -3,39 +3,39 @@ import './App.css';
 import AppHeader from './components/app-header/app-header';
 import BurgerConstructor from './components/burger-constructor/burger-constructor';
 import BurgerIngredients from './components/burger-ingredients/burger-ingredients';
-import { IIngredientsResponse } from './interfaces/ingredients-response';
 import { IIngredientData } from './interfaces/selected-ingredient-interface';
+import { getIngredients } from './utils/burger-api';
 
 const URL: string = 'https://norma.nomoreparties.space/api/ingredients';
 
-const useIngredientsFetch = () => {
-   const [ ingredients, setIngredients ] = useState<IIngredientData[]>([]);
+function useApiData<T>(initialValue: T, func: (...args: any[])  => Promise<[T, boolean]>): [ T, boolean ] {
+   const [ data, setData ] = useState<T>(initialValue);
+   const [ hasError, setHasError ] = useState(false);
 
    useEffect(() => {
-      const getIngredients = async () => {
-         const response = await fetch(URL);
-         
-         if (response.ok) {
-            const data = (await response.json()) as IIngredientsResponse;
+      setHasError(false);
 
-            if (data.success) {
-               setIngredients(data.data.map(item => item as IIngredientData));
-            }
-            else {
-               setIngredients([]);
-            }
+      const getData = async () => {
+         const [ data, hasError ] = await func();
+
+         if (hasError) {
+            setHasError(true);
+         }
+
+         if (data) {
+            setData(data);
          }
       }
 
-      getIngredients();
+      getData();
    }, []);
 
-   return [ ingredients ];
+   return [ data, hasError ];
 }
 
 function App() {
-   const [ ingredients ] = useIngredientsFetch();
-
+   const [ ingredients, hasError ] = useApiData<IIngredientData[]>([], () => getIngredients());
+   
    return (
       <div className="App">
          <AppHeader />
