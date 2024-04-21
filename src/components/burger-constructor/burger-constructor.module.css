@@ -1,6 +1,6 @@
 .burgerConstructor {
-    padding: 116px 36px 0;
-    max-width: 568px;
+    margin: 116px 36px 0;
+    width: 100%;
 }
 
 .orderWrapper {

@@ -12,3 +12,9 @@
 .textCenter {
     text-align: center;
 }
+
+.addButton {
+    position: absolute;
+    right: -4px;
+    padding: 10px 16px;
+}
