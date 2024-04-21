@@ -1,0 +1,51 @@
+.header {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    padding: 24px 320px;
+    background-color: #1C1C21;
+
+    @media screen and (max-width : 1870px) {
+        padding: 24px 120px;
+    }
+
+    @media screen and (max-width : 1470px) {
+        padding: 24px 40px;
+    }
+
+    @media screen and (max-width : 1024px) {
+        padding: 12px;
+    }
+    
+    @media screen and (max-width : 800px) {
+        padding: 4px;
+    }
+}
+
+.nav {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.logoWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profileButton {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    color: #F2F2F3;
+    border-width: 0;
+    cursor: pointer;
+}

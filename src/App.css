@@ -1,38 +1,44 @@
-.App {
-  text-align: center;
+body {
+    overflow: hidden;
+      
+    @media screen and (max-width : 1270px) {
+      overflow: auto;
+    }
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.main {
+    display: grid;
+    grid-template-columns: calc(100% - 660px) 620px;
+    padding: 40px 340px;
+    gap: 40px;
+
+    @media screen and (max-width : 1870px) {
+        padding: 40px 140px;
+    }
+
+    @media screen and (max-width : 1470px) {
+        padding: 40px;
+    }
+
+    @media screen and (max-width : 1270px) {
+        grid-template-columns: 100%;
+    }
+    
+    @media screen and (max-width : 800px) {
+        padding: 12px;
+    }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.burgerIngredients-wrapper {
+    min-width: 600px;
+    
+    @media screen and (max-width : 624px) {
+        min-width: unset;
+    }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.burgerConstructor-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
