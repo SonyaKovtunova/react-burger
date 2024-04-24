@@ -27,3 +27,12 @@
     gap: 16px;
     padding-right: 8px;
 }
+
+.examplePlace {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: dashed 1px var(--text-inactive-color);
+    border-radius: 4px;
+    padding: 16px;
+}

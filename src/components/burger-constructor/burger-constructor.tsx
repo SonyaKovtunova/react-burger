@@ -70,16 +70,24 @@ const BurgerConstructor = () => {
     return (
         <> 
             <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget}>
-                <div className={burgerConstructorStyles.list}>
-                    <>
-                        {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
-                        {
-                            ingredients.map((ingredient, index) => {
-                                return <BurgerConstructorItem key={index} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
-                            })
-                        }
-                        {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
-                    </>
+                <div className={`${burgerConstructorStyles.list} custom-scroll`}>
+                    {
+                        bun || ingredients.length 
+                            ? <>
+                                {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
+                                {
+                                    ingredients.map((ingredient, index) => {
+                                        return <BurgerConstructorItem key={index} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
+                                    })
+                                }
+                                {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
+                            </>
+                            : <div className={burgerConstructorStyles.examplePlace}>
+                                <p className="text text_type_main-default text_color_inactive">
+                                    Перенесите сюда ингредиенты
+                                </p>
+                            </div>
+                    }
                 </div>
                 <div className={burgerConstructorStyles.orderWrapper}>
                     <div></div>

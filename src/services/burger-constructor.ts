@@ -7,13 +7,17 @@ import update from 'immutability-helper'
 export const createOrderThunk = createAsyncThunk<string | null, IOrderRequest, { rejectValue: boolean }>(
     "burgerConstructor/createOrder",
     async (request, thunkAPI) => {
-      const [ data, hasError ] = await createOrder(request);
-  
-      if (hasError) {
-        return thunkAPI.rejectWithValue(true);
-      }
-  
-      return data;
+        if (!request.ingredients.length) {
+            return thunkAPI.rejectWithValue(true);
+        }
+
+        const [ data, hasError ] = await createOrder(request);
+    
+        if (hasError) {
+            return thunkAPI.rejectWithValue(true);
+        }
+    
+        return data;
     }
   );
 
@@ -66,6 +70,8 @@ export const burgerConstructorSlice = createSlice({
                 state.orderNumber = action.payload;
                 state.orderNumberRequest = false;
                 state.orderNumberFailed = false;
+                state.ingredients = [];
+                state.bun = null;
             })
             .addCase(createOrderThunk.rejected, (state) => {
                 state.orderNumber = null;
