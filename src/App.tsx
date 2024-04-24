@@ -4,6 +4,8 @@ import BurgerConstructor from './components/burger-constructor/burger-constructo
 import BurgerIngredients from './components/burger-ingredients/burger-ingredients';
 import { Provider } from 'react-redux';
 import { store } from './services';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function App() {
    return (
@@ -11,12 +13,14 @@ function App() {
          <Provider store={store}>
             <AppHeader />
             <main className='main'>
-               <div className='burgerIngredients-wrapper'>
-                  <BurgerIngredients />
-               </div>
-               <div className='burgerConstructor-wrapper'>
-                  <BurgerConstructor />
-               </div>
+               <DndProvider backend={HTML5Backend}>
+                  <div className='burgerIngredients-wrapper'>
+                     <BurgerIngredients />
+                  </div>
+                  <div className='burgerConstructor-wrapper'>
+                     <BurgerConstructor />
+                  </div>   
+               </DndProvider>
             </main>   
          </Provider>
       </div>

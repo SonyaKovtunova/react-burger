@@ -6,17 +6,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { useSelector } from 'react-redux';
-import { IBurgerConstructorState, createOrderThunk } from '../../services/burger-constructor';
+import { IBurgerConstructorState, burgerConstructorSlice, createOrderThunk } from '../../services/burger-constructor';
 import { IBurgerIngredientsState } from '../../services/burger-ingredients';
 import { useAppDispatch } from '../../services';
 import { IOrderRequest } from '../../interfaces/order-request';
+import { useDrop } from 'react-dnd';
+import { CATEGORIES } from '../../utils/constants';
 
 const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
-    const { ingredients, orderNumberIsCreated } = useSelector<{ burgerIngredients: IBurgerIngredientsState, burgerConstructor: IBurgerConstructorState }, { ingredients: IIngredientData[], orderNumberIsCreated: boolean }>(store => ({
-        ingredients: store.burgerIngredients.ingredients.filter(item => store.burgerConstructor.ingredients.find(i => i._id === item._id))
-            .map(item => ({...item, count: store.burgerConstructor.ingredients.find(i => i._id === item._id)?.count ?? 0 })),
+    const { ingredients, orderNumberIsCreated, bun } = useSelector<{ burgerIngredients: IBurgerIngredientsState, burgerConstructor: IBurgerConstructorState }, { ingredients: IIngredientData[], bun: IIngredientData | null, orderNumberIsCreated: boolean }>(store => ({
+        ingredients: store.burgerConstructor.ingredients,
+        bun: store.burgerConstructor.bun,
         orderNumberIsCreated: !!store.burgerConstructor.orderNumber && !store.burgerConstructor.orderNumberRequest && !store.burgerConstructor.orderNumberFailed,
     }));
 
@@ -28,37 +30,56 @@ const BurgerConstructor = () => {
         }
     }, [ orderNumberIsCreated ]);
 
+    const [ , dropTarget ] = useDrop({
+        accept: 'ingredients',
+        drop(item: { data: IIngredientData }) {
+            if (item.data.type === CATEGORIES[0].type) {
+                dispatch(burgerConstructorSlice.actions.updateBun(item.data));
+            } else {
+                dispatch(burgerConstructorSlice.actions.add(item.data));
+            }
+        },
+    });
+
     const createOrder = useCallback(() => {
         const request: IOrderRequest = {
-            ingredients: ingredients.reduce((result, item) => {
-                for (let i = 0; i < item.count; i++) {
-                    result.push(item._id);
-                }
-
-                return result;
-            }, [] as string[])
+            ingredients: ingredients.map(item => item._id)
         };
 
+        if (bun) {
+            request.ingredients.unshift(bun._id);
+            request.ingredients.push(bun._id);
+        }
+        
+
         dispatch(createOrderThunk(request));
-    }, [ingredients]);
+    }, [bun, ingredients]);
 
     const closeModal = useCallback(() => {
         setModalIsVisible(false);
     }, []);
 
     const sum = useMemo(() => 
-        ingredients.reduce((result, item) => result + (item.count ?? 0) * item.price, 0) ?? 0,
-    [ingredients]);
+        (bun?.price ?? 0) * 2 + ingredients.reduce((result, item) => result + item.price, 0) ?? 0,
+    [bun, ingredients]);
+
+    const moveIngredient = useCallback((dragIndex: number, hoverIndex: number) => {
+        dispatch(burgerConstructorSlice.actions.sort({ dragIndex, hoverIndex }));
+    }, []);
 
     return (
         <> 
-            <div className={burgerConstructorStyles.burgerConstructor}>
+            <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget}>
                 <div className={burgerConstructorStyles.list}>
-                    {
-                        ingredients.map((ingredient, index) => {
-                            return <BurgerConstructorItem key={index} ingredient={ingredient} />
-                        })
-                    }    
+                    <>
+                        {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
+                        {
+                            ingredients.map((ingredient, index) => {
+                                return <BurgerConstructorItem key={index} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
+                            })
+                        }
+                        {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
+                    </>
                 </div>
                 <div className={burgerConstructorStyles.orderWrapper}>
                     <div></div>

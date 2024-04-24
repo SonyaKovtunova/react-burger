@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createOrder } from "../utils/burger-api";
 import { IOrderRequest } from "../interfaces/order-request";
+import { IIngredientData } from "../interfaces/ingredient-data-interface";
+import update from 'immutability-helper'
 
 export const createOrderThunk = createAsyncThunk<string | null, IOrderRequest, { rejectValue: boolean }>(
     "burgerConstructor/createOrder",
@@ -15,13 +17,9 @@ export const createOrderThunk = createAsyncThunk<string | null, IOrderRequest, {
     }
   );
 
-interface IBurgerItemState {
-    _id: string,
-    count: number
-}
-
 export interface IBurgerConstructorState {
-    ingredients: IBurgerItemState[],
+    ingredients: IIngredientData[],
+    bun: IIngredientData | null,
     orderNumber: string | null,
     orderNumberRequest: boolean,
     orderNumberFailed: boolean,
@@ -29,6 +27,7 @@ export interface IBurgerConstructorState {
 
 const initialState: IBurgerConstructorState = {
     ingredients: [],
+    bun: null,
     orderNumber: null,
     orderNumberRequest: false,
     orderNumberFailed: false
@@ -38,23 +37,23 @@ export const burgerConstructorSlice = createSlice({
     name: 'burgerConstructor',
     initialState,
     reducers: {
-        add: (state, action: { type: string, payload: string }) => {
-            const ingredients = [...state.ingredients];
-
-            const ingredient = ingredients.find(item => item._id === action.payload);
-
-            if (!ingredient) {
-                ingredients.push({ _id: action.payload, count: 1 });
-            }
-            else {
-                ingredient.count++;
-            }
-
-            state.ingredients = ingredients;
+        updateBun: (state, action: { type: string, payload: IIngredientData }) => {
+            state.bun = action.payload;
         },
-        delete: (state, action: { type: string, payload: string }) => {
-            state.ingredients = state.ingredients.filter(item => item._id !== action.payload);
+        add: (state, action: { type: string, payload: IIngredientData }) => {
+            state.ingredients = [...state.ingredients, action.payload ];
         },
+        delete: (state, action: { type: string, payload: number }) => {
+            state.ingredients = state.ingredients.filter((item, index) => index !== action.payload);
+        },
+        sort: (state, action: { type: string, payload: { dragIndex: number, hoverIndex: number } }) => {
+            state.ingredients = update(state.ingredients, {
+                $splice: [
+                  [action.payload.dragIndex, 1],
+                  [action.payload.hoverIndex, 0, state.ingredients[action.payload.dragIndex]],
+                ],
+            });
+        }
     },
     extraReducers: (builder) => {
         builder
