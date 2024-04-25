@@ -15,8 +15,8 @@ const IngredientCategory = (props: IIngredientCategoryProps) => {
             </p>
             <div className={ingredientCategoryStyles.ingredients}>
                 {
-                    props.category.ingredients.map((ingredient, index) => {
-                        return <div key={index} className={ingredientCategoryStyles.ingredient}>
+                    props.category.ingredients.map(ingredient => {
+                        return <div key={ingredient._id} className={ingredientCategoryStyles.ingredient}>
                                 <Ingredient ingredient={ingredient} />
                             </div>;
                     })

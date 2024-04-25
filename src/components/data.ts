@@ -1,4 +1,4 @@
-import { IIngredientData } from "./interfaces/ingredient-data-interface";
+import { IIngredientData } from "../interfaces/ingredient-data-interface";
 
 export const data: IIngredientData[] = [
       {

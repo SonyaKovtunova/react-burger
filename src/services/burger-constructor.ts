@@ -4,20 +4,14 @@ import { IOrderRequest } from "../interfaces/order-request";
 import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import update from 'immutability-helper'
 
-export const createOrderThunk = createAsyncThunk<string | null, IOrderRequest, { rejectValue: boolean }>(
+export const createOrderThunk = createAsyncThunk<string, IOrderRequest, { rejectValue: boolean }>(
     "burgerConstructor/createOrder",
     async (request, thunkAPI) => {
         if (!request.ingredients.length) {
             return thunkAPI.rejectWithValue(true);
         }
 
-        const [ data, hasError ] = await createOrder(request);
-    
-        if (hasError) {
-            return thunkAPI.rejectWithValue(true);
-        }
-    
-        return data;
+        return await createOrder(request);
     }
   );
 

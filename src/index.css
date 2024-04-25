@@ -17,3 +17,11 @@ code {
 html {
   scrollbar-color: unset !important;
 }
+
+body {
+  overflow: hidden;
+    
+  @media screen and (max-width : 1270px) {
+    overflow: auto;
+  }
+}
