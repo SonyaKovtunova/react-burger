@@ -3,6 +3,7 @@ import { createOrder } from "../utils/burger-api";
 import { IOrderRequest } from "../interfaces/order-request";
 import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import update from 'immutability-helper'
+import { v4 as uuidv4 } from 'uuid';
 
 export const createOrderThunk = createAsyncThunk<string, IOrderRequest, { rejectValue: boolean }>(
     "burgerConstructor/createOrder",
@@ -38,8 +39,13 @@ export const burgerConstructorSlice = createSlice({
         updateBun: (state, action: { type: string, payload: IIngredientData }) => {
             state.bun = action.payload;
         },
-        add: (state, action: { type: string, payload: IIngredientData }) => {
-            state.ingredients = [...state.ingredients, action.payload ];
+        add: {
+            reducer: (state, action: { type: string, payload: IIngredientData }) => {
+                state.ingredients.push(action.payload);
+            },
+            prepare: (data: IIngredientData) => {
+                return { payload: { ...data, dndUniqueId: uuidv4() } };
+            }
         },
         delete: (state, action: { type: string, payload: number }) => {
             state.ingredients = state.ingredients.filter((item, index) => index !== action.payload);

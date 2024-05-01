@@ -5,7 +5,7 @@ import { CATEGORIES } from "../utils/constants";
 
 export const getIngredientsThunk = createAsyncThunk<IIngredientData[], void, { rejectValue: boolean }>(
   "burgerIngredients/getIngredientsThunk",
-  async (_, thunkAPI) => {
+  async () => {
     return await getIngredients();
   }
 );

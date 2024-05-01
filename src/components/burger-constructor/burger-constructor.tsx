@@ -77,7 +77,7 @@ const BurgerConstructor = () => {
                                 {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
                                 {
                                     ingredients.map((ingredient, index) => {
-                                        return <BurgerConstructorItem key={ingredient._id} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
+                                        return <BurgerConstructorItem key={ingredient.dndUniqueId} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
                                     })
                                 }
                                 {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
