@@ -7,37 +7,16 @@ import { ICategoryData } from "../../interfaces/category-data-interface";
 import IngredientDetails from "./ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
 import { useSelector } from "react-redux";
-import { IBurgerIngredientsState, burgerIngredientsSlice, getIngredientsThunk } from "../../services/burger-ingredients";
-import { useAppDispatch } from "../../services";
+import { clearSelectedIngredient, getIngredientsThunk, setTab } from "../../services/burger-ingredients";
+import { IStoreState, getCategoriesState, useAppDispatch } from "../../services";
 import { CATEGORIES } from "../../utils/constants";
 
 const BurgerIngredients = () => {
 
-    const { categories, currentTab, selectedIngredient } = useSelector<{ burgerIngredients: IBurgerIngredientsState }, { categories: ICategoryData[], currentTab: string, selectedIngredient?: IIngredientData | null, }>(store => ({
-        categories: store.burgerIngredients.ingredients.reduce(
-            (result: ICategoryData[], item) => {
-            if (result.length === 0 || !result.find(x => x.type === item.type)) {
-                result.push({
-                    type: item.type,
-                    ingredients: []
-                });
-            }
-            
-            const category = result.find(x => x.type === item.type);
-    
-            if (category) {
-                category.ingredients.push(item);
-            }
-    
-            return result;
-            }, 
-            [],
-        ),
-        currentTab: store.burgerIngredients.currentTab,
-        selectedIngredient: store.burgerIngredients.selectedIngredientId 
-            ? store.burgerIngredients.ingredients.find(item => item._id === store.burgerIngredients.selectedIngredientId)
-            : null
-    }));
+    const categories = useSelector<IStoreState, ICategoryData[]>(getCategoriesState);
+
+    const currentTab = useSelector<IStoreState, string>(store => store.burgerIngredients.currentTab);
+    const selectedIngredient  = useSelector<IStoreState, IIngredientData | null>(store => store.burgerIngredients.selectedIngredient);
 
     const dispatch = useAppDispatch();
 
@@ -56,7 +35,7 @@ const BurgerIngredients = () => {
                         key={index}
                         value={category.type} 
                         active={currentTab === category.type} 
-                        onClick={ () => dispatch(burgerIngredientsSlice.actions.setTab(category.type)) }>
+                        onClick={ () => dispatch(setTab(category.type)) }>
                         {category.name}
                     </Tab>
                 })
@@ -66,7 +45,7 @@ const BurgerIngredients = () => {
 
     const closeModal = useCallback(() => {
         if (selectedIngredient) {
-            dispatch(burgerIngredientsSlice.actions.clearSelectedIngredientId());
+            dispatch(clearSelectedIngredient());
         }
     }, [selectedIngredient]);
 
@@ -90,7 +69,7 @@ const BurgerIngredients = () => {
         }
 
         if (currentTab !== CATEGORIES[minIndex].type) {
-            dispatch(burgerIngredientsSlice.actions.setTab(CATEGORIES[minIndex].type));
+            dispatch(setTab(CATEGORIES[minIndex].type));
         }
     }
 

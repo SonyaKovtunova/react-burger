@@ -6,9 +6,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { useSelector } from 'react-redux';
-import { IBurgerConstructorState, burgerConstructorSlice, createOrderThunk } from '../../services/burger-constructor';
-import { IBurgerIngredientsState } from '../../services/burger-ingredients';
-import { useAppDispatch } from '../../services';
+import { addIngredient, createOrderThunk, sortIngredients, updateBun } from '../../services/burger-constructor';
+import { IStoreState, useAppDispatch } from '../../services';
 import { IOrderRequest } from '../../interfaces/order-request';
 import { useDrop } from 'react-dnd';
 import { CATEGORIES } from '../../utils/constants';
@@ -16,11 +15,11 @@ import { CATEGORIES } from '../../utils/constants';
 const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
-    const { ingredients, orderNumberIsCreated, bun } = useSelector<{ burgerIngredients: IBurgerIngredientsState, burgerConstructor: IBurgerConstructorState }, { ingredients: IIngredientData[], bun: IIngredientData | null, orderNumberIsCreated: boolean }>(store => ({
-        ingredients: store.burgerConstructor.ingredients,
-        bun: store.burgerConstructor.bun,
-        orderNumberIsCreated: !!store.burgerConstructor.orderNumber && !store.burgerConstructor.orderNumberRequest && !store.burgerConstructor.orderNumberFailed,
-    }));
+    const ingredients = useSelector<IStoreState, IIngredientData[]>(store => store.burgerConstructor.ingredients);
+    const orderNumberIsCreated = useSelector<IStoreState, boolean>(store => !!store.burgerConstructor.orderNumber 
+        && !store.burgerConstructor.orderNumberRequest 
+        && !store.burgerConstructor.orderNumberFailed);
+    const bun = useSelector<IStoreState, IIngredientData | null>(store => store.burgerConstructor.bun);
 
     const dispatch = useAppDispatch();
 
@@ -34,9 +33,9 @@ const BurgerConstructor = () => {
         accept: 'ingredients',
         drop(item: { data: IIngredientData }) {
             if (item.data.type === CATEGORIES[0].type) {
-                dispatch(burgerConstructorSlice.actions.updateBun(item.data));
+                dispatch(updateBun(item.data));
             } else {
-                dispatch(burgerConstructorSlice.actions.add(item.data));
+                dispatch(addIngredient(item.data));
             }
         },
     });
@@ -64,7 +63,7 @@ const BurgerConstructor = () => {
     [bun, ingredients]);
 
     const moveIngredient = useCallback((dragIndex: number, hoverIndex: number) => {
-        dispatch(burgerConstructorSlice.actions.sort({ dragIndex, hoverIndex }));
+        dispatch(sortIngredients({ dragIndex, hoverIndex }));
     }, []);
 
     return (

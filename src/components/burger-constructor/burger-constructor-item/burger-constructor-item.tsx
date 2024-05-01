@@ -2,7 +2,7 @@ import { ConstructorElement, DragIcon } from "@ya.praktikum/react-developer-burg
 import burgerConstructorItemStyles from './burger-constructor-item.module.css';
 import { IIngredientData } from "../../../interfaces/ingredient-data-interface";
 import { useAppDispatch } from "../../../services";
-import { burgerConstructorSlice } from "../../../services/burger-constructor";
+import { deleteIngredient } from "../../../services/burger-constructor";
 import { XYCoord, useDrag, useDrop } from "react-dnd";
 import { CATEGORIES } from "../../../utils/constants";
 import { useMemo, useRef } from "react";
@@ -63,7 +63,7 @@ const BurgerConstructorItem = ({ index = 0, ingredient, moveIngredient }: IBurge
     })
 
     const removeIngredient = () => {
-        dispatch(burgerConstructorSlice.actions.delete(index));
+        dispatch(deleteIngredient(index));
     }
 
     dragRef(dropRef(ref))

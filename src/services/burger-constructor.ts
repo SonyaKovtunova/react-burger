@@ -39,7 +39,7 @@ export const burgerConstructorSlice = createSlice({
         updateBun: (state, action: { type: string, payload: IIngredientData }) => {
             state.bun = action.payload;
         },
-        add: {
+        addIngredient: {
             reducer: (state, action: { type: string, payload: IIngredientData }) => {
                 state.ingredients.push(action.payload);
             },
@@ -47,10 +47,10 @@ export const burgerConstructorSlice = createSlice({
                 return { payload: { ...data, dndUniqueId: uuidv4() } };
             }
         },
-        delete: (state, action: { type: string, payload: number }) => {
+        deleteIngredient: (state, action: { type: string, payload: number }) => {
             state.ingredients = state.ingredients.filter((item, index) => index !== action.payload);
         },
-        sort: (state, action: { type: string, payload: { dragIndex: number, hoverIndex: number } }) => {
+        sortIngredients: (state, action: { type: string, payload: { dragIndex: number, hoverIndex: number } }) => {
             state.ingredients = update(state.ingredients, {
                 $splice: [
                   [action.payload.dragIndex, 1],
@@ -80,5 +80,7 @@ export const burgerConstructorSlice = createSlice({
             });
     },
 });
+
+export const { updateBun, addIngredient, deleteIngredient, sortIngredients } = burgerConstructorSlice.actions;
   
 export default burgerConstructorSlice.reducer;

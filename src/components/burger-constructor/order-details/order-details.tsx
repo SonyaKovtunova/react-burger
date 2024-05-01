@@ -1,12 +1,10 @@
 import orderDetailsStyles from './order-details.module.css';
 import doneImg from '../../../images/done.png';
-import { IBurgerConstructorState } from '../../../services/burger-constructor';
 import { useSelector } from 'react-redux';
+import { IStoreState } from '../../../services';
 
 const OrderDetails = () => {
-    const { orderNumber } = useSelector<{ burgerConstructor: IBurgerConstructorState }, { orderNumber: string | null }>(store => ({
-        orderNumber: store.burgerConstructor.orderNumber,
-    }));
+    const orderNumber = useSelector<IStoreState, string | null>(store => store.burgerConstructor.orderNumber);
 
     return (
         <div className={`${orderDetailsStyles.bodyWrapper} pt-8 pb-15`}>

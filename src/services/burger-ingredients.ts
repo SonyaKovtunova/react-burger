@@ -15,7 +15,7 @@ export interface IBurgerIngredientsState {
   ingredientsRequest: boolean,
   ingredientsFailed: boolean,
   currentTab: string,
-  selectedIngredientId?: string | null,
+  selectedIngredient: IIngredientData | null,
 }
 
 const initialState: IBurgerIngredientsState = {
@@ -23,6 +23,7 @@ const initialState: IBurgerIngredientsState = {
   ingredientsRequest: false,
   ingredientsFailed: false,
   currentTab: CATEGORIES[0].type,
+  selectedIngredient: null
 }
   
 export const burgerIngredientsSlice = createSlice({
@@ -32,11 +33,11 @@ export const burgerIngredientsSlice = createSlice({
     setTab: (state, action: { type: string, payload: string }) => {
       state.currentTab = action.payload;
     },
-    setSelectedIngredientId: (state, action: { type: string, payload: string }) => {
-      state.selectedIngredientId = action.payload;
+    setSelectedIngredient: (state, action: { type: string, payload: IIngredientData }) => {
+      state.selectedIngredient = action.payload;
     },
-    clearSelectedIngredientId: (state) => {
-      state.selectedIngredientId = null;
+    clearSelectedIngredient: (state) => {
+      state.selectedIngredient = null;
     }
   },
   extraReducers: (builder) => {
@@ -57,4 +58,5 @@ export const burgerIngredientsSlice = createSlice({
     },
 });
   
+export const { setTab, setSelectedIngredient, clearSelectedIngredient } = burgerIngredientsSlice.actions;
 export default burgerIngredientsSlice.reducer;
