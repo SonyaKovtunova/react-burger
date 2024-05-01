@@ -6,11 +6,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { useSelector } from 'react-redux';
-import { addIngredient, createOrderThunk, sortIngredients, updateBun } from '../../services/burger-constructor';
+import { addIngredient, clearOrderNumber, createOrderThunk, sortIngredients,updateBun } from '../../services/burger-constructor';
 import { IStoreState, useAppDispatch } from '../../services';
 import { IOrderRequest } from '../../interfaces/order-request';
+import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
-import { CATEGORIES } from '../../utils/constants';
+import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
 
 const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
@@ -30,7 +31,7 @@ const BurgerConstructor = () => {
     }, [ orderNumberIsCreated ]);
 
     const [ , dropTarget ] = useDrop({
-        accept: 'ingredients',
+        accept: INGREDIENT_DND_NAME,
         drop(item: { data: IIngredientData }) {
             if (item.data.type === CATEGORIES[0].type) {
                 dispatch(updateBun(item.data));
@@ -56,6 +57,7 @@ const BurgerConstructor = () => {
 
     const closeModal = useCallback(() => {
         setModalIsVisible(false);
+        dispatch(clearOrderNumber());
     }, []);
 
     const sum = useMemo(() => 
@@ -71,21 +73,21 @@ const BurgerConstructor = () => {
             <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget}>
                 <div className={`${burgerConstructorStyles.list} custom-scroll`}>
                     {
-                        bun || ingredients.length 
-                            ? <>
-                                {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
-                                {
-                                    ingredients.map((ingredient, index) => {
-                                        return <BurgerConstructorItem key={ingredient.dndUniqueId} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
-                                    })
-                                }
-                                {bun && <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />}
-                            </>
-                            : <div className={burgerConstructorStyles.examplePlace}>
-                                <p className="text text_type_main-default text_color_inactive">
-                                    Перенесите сюда ингредиенты
-                                </p>
-                            </div>
+                        bun 
+                            ? <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />
+                            : <EmptyItem isBun />
+                    }
+                    {
+                        ingredients.length 
+                            ? ingredients.map((ingredient, index) => {
+                                return <BurgerConstructorItem key={ingredient.dndUniqueId} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
+                            })
+                            : <EmptyItem />
+                    }
+                    {
+                        bun 
+                            ? <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />
+                            : <EmptyItem isBun isTop={false} />
                     }
                 </div>
                 <div className={burgerConstructorStyles.orderWrapper}>

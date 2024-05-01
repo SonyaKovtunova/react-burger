@@ -12,3 +12,5 @@ export const CATEGORIES = [
         name: 'Соусы',
     }
 ];
+
+export const INGREDIENT_DND_NAME = 'ingredient';

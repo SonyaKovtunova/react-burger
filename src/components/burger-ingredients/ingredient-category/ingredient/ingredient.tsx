@@ -5,7 +5,7 @@ import { IStoreState, useAppDispatch } from "../../../../services";
 import { setSelectedIngredient } from "../../../../services/burger-ingredients";
 import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
-import { CATEGORIES } from "../../../../utils/constants";
+import { CATEGORIES, INGREDIENT_DND_NAME } from "../../../../utils/constants";
 
 interface IIngredientProps {
     ingredient: IIngredientData,
@@ -23,7 +23,7 @@ const Ingredient = (props: IIngredientProps) => {
     const dispatch = useAppDispatch();
 
     const [ , dragRef ] = useDrag({
-        type: 'ingredients',
+        type: INGREDIENT_DND_NAME,
         item: { data: props.ingredient },
     });
     

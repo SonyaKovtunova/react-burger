@@ -57,6 +57,9 @@ export const burgerConstructorSlice = createSlice({
                   [action.payload.hoverIndex, 0, state.ingredients[action.payload.dragIndex]],
                 ],
             });
+        },
+        clearOrderNumber: (state) => {
+            state.orderNumber = null;
         }
     },
     extraReducers: (builder) => {
@@ -81,6 +84,6 @@ export const burgerConstructorSlice = createSlice({
     },
 });
 
-export const { updateBun, addIngredient, deleteIngredient, sortIngredients } = burgerConstructorSlice.actions;
+export const { updateBun, addIngredient, deleteIngredient, sortIngredients, clearOrderNumber } = burgerConstructorSlice.actions;
   
 export default burgerConstructorSlice.reducer;
