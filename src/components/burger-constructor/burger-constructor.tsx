@@ -12,6 +12,7 @@ import { IOrderRequest } from '../../interfaces/order-request';
 import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
 import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
+import BunItem from './bun-item/bun-item';
 
 const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
@@ -74,7 +75,7 @@ const BurgerConstructor = () => {
                 <div className={`${burgerConstructorStyles.list} custom-scroll`}>
                     {
                         bun 
-                            ? <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />
+                            ? <BunItem ingredient={bun} />
                             : <EmptyItem isBun />
                     }
                     {
@@ -86,7 +87,7 @@ const BurgerConstructor = () => {
                     }
                     {
                         bun 
-                            ? <BurgerConstructorItem ingredient={bun} moveIngredient={moveIngredient} />
+                            ? <BunItem ingredient={bun} type='bottom' />
                             : <EmptyItem isBun isTop={false} />
                     }
                 </div>
