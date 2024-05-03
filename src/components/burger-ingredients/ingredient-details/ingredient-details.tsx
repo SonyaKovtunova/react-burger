@@ -1,4 +1,4 @@
-import { IIngredientData } from "../../../interfaces/selected-ingredient-interface";
+import { IIngredientData } from "../../../interfaces/ingredient-data-interface";
 import ingredientDetailsStyles from './ingredient-details.module.css';
 
 interface IIngredientDetailsProps {

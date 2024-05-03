@@ -1,37 +1,95 @@
 import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { IIngredientData } from '../../interfaces/selected-ingredient-interface';
-import { useCallback, useState } from 'react';
+import { IIngredientData } from '../../interfaces/ingredient-data-interface';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
+import { useSelector } from 'react-redux';
+import { addIngredient, clearOrderNumber, createOrderThunk, sortIngredients,updateBun } from '../../services/burger-constructor';
+import { IStoreState, useAppDispatch } from '../../services';
+import { IOrderRequest } from '../../interfaces/order-request';
+import EmptyItem from './empty-item/empty-item';
+import { useDrop } from 'react-dnd';
+import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
+import BunItem from './bun-item/bun-item';
 
-interface IBurgerConstructorProps {
-    ingredients: IIngredientData[],
-}
-
-const BurgerConstructor = (props: IBurgerConstructorProps) => {
+const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
-    const openModal = () => {
-        setModalIsVisible(true);
-    };
+    const ingredients = useSelector<IStoreState, IIngredientData[]>(store => store.burgerConstructor.ingredients);
+    const orderNumberIsCreated = useSelector<IStoreState, boolean>(store => !!store.burgerConstructor.orderNumber 
+        && !store.burgerConstructor.orderNumberRequest 
+        && !store.burgerConstructor.orderNumberFailed);
+    const bun = useSelector<IStoreState, IIngredientData | null>(store => store.burgerConstructor.bun);
+
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (orderNumberIsCreated) {
+            setModalIsVisible(true);
+        }
+    }, [ orderNumberIsCreated ]);
+
+    const [ , dropTarget ] = useDrop({
+        accept: INGREDIENT_DND_NAME,
+        drop(item: { data: IIngredientData }) {
+            if (item.data.type === CATEGORIES[0].type) {
+                dispatch(updateBun(item.data));
+            } else {
+                dispatch(addIngredient(item.data));
+            }
+        },
+    });
+
+    const createOrder = useCallback(() => {
+        const request: IOrderRequest = {
+            ingredients: ingredients.map(item => item._id)
+        };
+
+        if (bun) {
+            request.ingredients.unshift(bun._id);
+            request.ingredients.push(bun._id);
+        }
+        
+
+        dispatch(createOrderThunk(request));
+    }, [bun, ingredients]);
 
     const closeModal = useCallback(() => {
         setModalIsVisible(false);
+        dispatch(clearOrderNumber());
     }, []);
 
-    const sum = props.ingredients.reduce((result, item) => result + (item.count ?? 0) * item.price, 0) ?? 0;
+    const sum = useMemo(() => 
+        (bun?.price ?? 0) * 2 + ingredients.reduce((result, item) => result + item.price, 0) ?? 0,
+    [bun, ingredients]);
+
+    const moveIngredient = useCallback((dragIndex: number, hoverIndex: number) => {
+        dispatch(sortIngredients({ dragIndex, hoverIndex }));
+    }, []);
 
     return (
         <> 
-            <div className={burgerConstructorStyles.burgerConstructor}>
-                <div className={burgerConstructorStyles.list}>
+            <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget}>
+                <div className={`${burgerConstructorStyles.list} custom-scroll`}>
                     {
-                        props.ingredients.map((ingredient, index) => {
-                            return <BurgerConstructorItem key={index} ingredient={ingredient} />
-                        })
-                    }    
+                        bun 
+                            ? <BunItem ingredient={bun} />
+                            : <EmptyItem isBun />
+                    }
+                    {
+                        ingredients.length 
+                            ? ingredients.map((ingredient, index) => {
+                                return <BurgerConstructorItem key={ingredient.dndUniqueId} ingredient={ingredient} index={index} moveIngredient={moveIngredient} />
+                            })
+                            : <EmptyItem />
+                    }
+                    {
+                        bun 
+                            ? <BunItem ingredient={bun} type='bottom' />
+                            : <EmptyItem isBun isTop={false} />
+                    }
                 </div>
                 <div className={burgerConstructorStyles.orderWrapper}>
                     <div></div>
@@ -39,7 +97,7 @@ const BurgerConstructor = (props: IBurgerConstructorProps) => {
                         <p className="text text_type_main-large">{sum} <CurrencyIcon type="primary" /></p>
                     </div>
                     <div className={burgerConstructorStyles.buttonWrapper}>
-                        <Button htmlType="button" type="primary" size="large" onClick={openModal}>
+                        <Button htmlType="button" type="primary" size="large" onClick={createOrder}>
                             Оформить заказ
                         </Button>    
                     </div>

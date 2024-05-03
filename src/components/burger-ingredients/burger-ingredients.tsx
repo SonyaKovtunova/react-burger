@@ -1,62 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect } from "react";
 import IngredientCategory from "./ingredient-category/ingredient-category";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerIngredientsStyles from './burger-ingredients.module.css';
-import { IIngredientData } from "../../interfaces/selected-ingredient-interface";
-import { ICategoryData } from "../../interfaces/category-interface";
+import { IIngredientData } from "../../interfaces/ingredient-data-interface";
+import { ICategoryData } from "../../interfaces/category-data-interface";
 import IngredientDetails from "./ingredient-details/ingredient-details";
 import Modal from "../modal/modal";
+import { useSelector } from "react-redux";
+import { clearSelectedIngredient, getIngredientsThunk, setTab } from "../../services/burger-ingredients";
+import { IStoreState, getCategoriesState, useAppDispatch } from "../../services";
+import { CATEGORIES } from "../../utils/constants";
 
-interface IBurgerIngredientsProps {
-    ingredients: IIngredientData[],
-}
+const BurgerIngredients = () => {
 
-const CATEGORIES = [
-    {
-        type: 'bun',
-        name: 'Булки',
-    }, 
-    {
-        type: 'sauce',
-        name: 'Соусы',
-    },
-    {
-        type: 'main',
-        name: 'Начинки',
-    }
-];
+    const categories = useSelector<IStoreState, ICategoryData[]>(getCategoriesState);
 
-const BurgerIngredients = (props: IBurgerIngredientsProps) => {
+    const currentTab = useSelector<IStoreState, string>(store => store.burgerIngredients.currentTab);
+    const selectedIngredient  = useSelector<IStoreState, IIngredientData | null>(store => store.burgerIngredients.selectedIngredient);
 
-    const [ activeCategoryType, setActiveCategoryType ] = useState('bun');
-    const [ categories, setCategories ] = useState<ICategoryData[]>([]);
-    const [ modalIsVisible, setModalIsVisible ] = useState(false);
-    const [ ingredientToShow, setIngredientToShow ] = useState<IIngredientData>();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const groupBy = (items: IIngredientData[]): ICategoryData[] => items.reduce(
-            (result: ICategoryData[], item) => {
-            if (result.length === 0 || !result.find(x => x.type === item.type)) {
-                result.push({
-                    type: item.type,
-                    ingredients: []
-                });
-            }
-            
-            const category = result.find(x => x.type === item.type);
-    
-            if (category) {
-                category.ingredients.push(item);
-            }
-    
-            return result;
-            }, 
-            [],
-        );    
-     
-        setCategories(groupBy(props.ingredients));
-    }, [props.ingredients]);
+        dispatch(getIngredientsThunk());
+    }, [dispatch]);
 
+    useEffect(() => {
+    }, [ selectedIngredient ]);
+    
     const getTabs = useCallback(() => {
         return (<div className={burgerIngredientsStyles.tabs}>
             {
@@ -64,38 +34,59 @@ const BurgerIngredients = (props: IBurgerIngredientsProps) => {
                     return <Tab 
                         key={index}
                         value={category.type} 
-                        active={activeCategoryType === category.type} 
-                        onClick={ () => setActiveCategoryType(category.type) }>
+                        active={currentTab === category.type} 
+                        onClick={ () => dispatch(setTab(category.type)) }>
                         {category.name}
                     </Tab>
                 })
             }
         </div>);
-    }, [activeCategoryType]);
-
-    const openModal = useCallback(() => {
-        setModalIsVisible(true);
-    }, []);
+    }, [currentTab]);
 
     const closeModal = useCallback(() => {
-        setModalIsVisible(false);
-        setIngredientToShow(undefined);
-    }, [ingredientToShow]);
+        if (selectedIngredient) {
+            dispatch(clearSelectedIngredient());
+        }
+    }, [selectedIngredient]);
+
+    let listEl: HTMLDivElement;
+    let categ: HTMLDivElement[] = [];
+
+    const onScroll = (e: SyntheticEvent<HTMLDivElement>) => {
+        const divEl = e.target as HTMLDivElement;
+        const top = divEl.getBoundingClientRect().top;
+
+        let minIndex = 0;
+        let minDistance = Math.abs(categ[0].getBoundingClientRect().top - top);
+
+        for (let i = 1; i < categ.length; i++) {
+            let distance = Math.abs(categ[i].getBoundingClientRect().top - top);
+
+            if (distance < minDistance) {
+                minIndex = i;
+                minDistance = distance;
+            }
+        }
+
+        if (currentTab !== CATEGORIES[minIndex].type) {
+            dispatch(setTab(CATEGORIES[minIndex].type));
+        }
+    }
 
     return (
         <>
             <p className="text text_type_main-large mb-5">Соберите бургер</p>
             { getTabs() }
-            <div className={burgerIngredientsStyles.list}>
+            <div className={`${burgerIngredientsStyles.list} custom-scroll`} ref={(ref) => listEl = ref as HTMLDivElement } onScroll={onScroll}>
                 {
                     categories.map((category, index) => {
-                        return <IngredientCategory category={category} key={index} openModal={openModal} selectIngredientToShow={setIngredientToShow} />;
+                        return <div key={index} ref={(ref) => categ[index] = ref as HTMLDivElement }><IngredientCategory category={category} key={index} /></div>;
                     })
                 }
             </div>
-            { modalIsVisible && ingredientToShow &&
+            { selectedIngredient &&
                 <Modal title='Детали ингредиента' onClose={closeModal}>
-                    <IngredientDetails ingredient={ingredientToShow} />
+                    <IngredientDetails ingredient={selectedIngredient} />
                 </Modal>
             }
         </>
