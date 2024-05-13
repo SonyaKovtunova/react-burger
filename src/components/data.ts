@@ -1,6 +1,6 @@
 import { IIngredientData } from "../interfaces/ingredient-data-interface";
 
-export const data: IIngredientData[] = [
+/*export const data: IIngredientData[] = [
       {
          "_id":"60666c42cc7b410027a1a9b1",
          "name":"Краторная булка N-200i",
@@ -196,4 +196,4 @@ export const data: IIngredientData[] = [
          "image_mobile":"https://code.s3.yandex.net/react/code/bun-01-mobile.png",
          "image_large":"https://code.s3.yandex.net/react/code/bun-01-large.png",
       }
-];
+];*/
