@@ -33,7 +33,12 @@ const LoginPage = () => {
                 icon={isPasswordShowing ? 'HideIcon' : 'ShowIcon'} 
                 onIconClick={() => setIsPasswordShowing(!isPasswordShowing)}            
                 />
-            <Button htmlType="button" type="primary" size="medium" extraClass='mb-15'>
+            <Button 
+                htmlType="button" 
+                type="primary" 
+                size="medium" 
+                extraClass='mb-15'
+                disabled={!email || !password}>
                 Войти
             </Button>
             <div>

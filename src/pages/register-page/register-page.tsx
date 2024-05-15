@@ -1,14 +1,27 @@
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './register-page.module.css';
+import { register } from '../../utils/burger-api';
 
 const RegisterPage = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
+
+    const navigate = useNavigate();
     
+    const onRegister = async () => {
+        try {
+            const data = await register(email, name, password);
+
+            if (data.success) {
+                navigate('/', {replace: true});
+            }
+        } catch (error) { }
+    }
+
     return (
         <div className={styles.registerFormWrapper}>
             <p className="text text_type_main-medium">
@@ -43,7 +56,14 @@ const RegisterPage = () => {
                 icon={isPasswordShowing ? 'HideIcon' : 'ShowIcon'} 
                 onIconClick={() => setIsPasswordShowing(!isPasswordShowing)}            
                 />
-            <Button htmlType="button" type="primary" size="medium" extraClass='mb-15'>
+            <Button 
+                htmlType="button" 
+                type="primary" 
+                size="medium" 
+                extraClass='mb-15' 
+                disabled={!email || !name || !password}
+                onClick={onRegister}
+                >
                 Зарегистрироваться
             </Button>
             <div>

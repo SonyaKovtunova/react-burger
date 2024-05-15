@@ -6,6 +6,20 @@ import { IResetPasswordResponse } from "../interfaces/reset-password-response";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
 
+export const register = (email: string, name: string, password: string) : Promise<IResetPasswordResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Content-Type', 'application/json');
+
+    const request: RequestInit = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, name, password }),
+    };
+
+    return sendRequest(`${URL}/register`, request)
+        .then((response) => response as IResetPasswordResponse);
+}
+
 export const sendPasswordResetCode = (email: string) : Promise<IResetPasswordResponse> => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
