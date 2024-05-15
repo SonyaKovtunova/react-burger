@@ -3,7 +3,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import mainStyles from './main.module.css';
 import { RevolvingDot } from 'react-loader-spinner';
-import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { IStoreState } from '../../services';
@@ -14,7 +13,6 @@ const Main = () => {
   
     return (
         <>
-            <AppHeader />
             <main className={mainStyles.main}>
                 <DndProvider backend={HTML5Backend}>
                 <div className={mainStyles.burgerIngredientsWrapper}>
@@ -32,7 +30,6 @@ const Main = () => {
                     color="#4c4cff"
                 />   
             </div>}
-            
         </>
     );
 }
