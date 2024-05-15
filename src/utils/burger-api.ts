@@ -3,10 +3,53 @@ import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import { IOrderRequest } from "../interfaces/order-request";
 import { IOrderResponse } from "../interfaces/order-response";
 import { IResetPasswordResponse } from "../interfaces/reset-password-response";
+import { IAuthResponse } from "../interfaces/auth-response";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
 
-export const register = (email: string, name: string, password: string) : Promise<IResetPasswordResponse> => {
+export const login = (email: string, password: string) : Promise<IAuthResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Content-Type', 'application/json');
+
+    const request: RequestInit = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password }),
+    };
+
+    return sendRequest(`${URL}/login`, request)
+        .then((response) => response as IAuthResponse);
+}
+
+export const logout = (token: string) : Promise<IResetPasswordResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Content-Type', 'application/json');
+
+    const request: RequestInit = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ token }),
+    };
+
+    return sendRequest(`${URL}/login`, request)
+        .then((response) => response as IResetPasswordResponse);
+}
+
+export const refreshToken = (token: string) : Promise<IAuthResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Content-Type', 'application/json');
+
+    const request: RequestInit = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ token }),
+    };
+
+    return sendRequest(`${URL}/token`, request)
+        .then((response) => response as IAuthResponse);
+}
+
+export const register = (email: string, name: string, password: string) : Promise<IAuthResponse> => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -17,7 +60,7 @@ export const register = (email: string, name: string, password: string) : Promis
     };
 
     return sendRequest(`${URL}/register`, request)
-        .then((response) => response as IResetPasswordResponse);
+        .then((response) => response as IAuthResponse);
 }
 
 export const sendPasswordResetCode = (email: string) : Promise<IResetPasswordResponse> => {
