@@ -1,4 +1,4 @@
-import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
@@ -23,14 +23,11 @@ const ForgotPasswordPage = () => {
             <p className="text text_type_main-medium">
                 Восстановление пароля
             </p>
-            <Input
-                type={'email'}
+            <EmailInput
                 placeholder={'Укажите e-mail'}
                 onChange={e => setEmail(e.target.value)}
                 value={email}
-                size={'default'}
-                onPointerEnterCapture={undefined} 
-                onPointerLeaveCapture={undefined}               
+                size={'default'}              
                 />
             <Button 
                 htmlType="button" 

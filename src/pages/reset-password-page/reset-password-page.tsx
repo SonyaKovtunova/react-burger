@@ -1,4 +1,4 @@
-import { Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
+import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
@@ -6,7 +6,6 @@ import { resetPassword } from "../../utils/burger-api";
 
 const ResetPasswordPage = () => {
     const [password, setPassword] = useState<string>('');
-    const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
     const [token, setToken] = useState<string>('');
 
     const navigate = useNavigate();
@@ -26,16 +25,11 @@ const ResetPasswordPage = () => {
             <p className="text text_type_main-medium">
                 Восстановление пароля
             </p>
-            <Input
-                type={'password'}
+            <PasswordInput
                 placeholder={'Введите новый пароль'}
                 onChange={e => setPassword(e.target.value)}
                 value={password}
-                size={'default'}
-                onPointerEnterCapture={undefined} 
-                onPointerLeaveCapture={undefined}
-                icon={isPasswordShowing ? 'HideIcon' : 'ShowIcon'} 
-                onIconClick={() => setIsPasswordShowing(!isPasswordShowing)}            
+                size={'default'}          
                 />
             <Input
                 type={'text'}

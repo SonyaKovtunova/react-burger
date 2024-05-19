@@ -1,4 +1,4 @@
-import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './register-page.module.css';
@@ -8,7 +8,6 @@ const RegisterPage = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [isPasswordShowing, setIsPasswordShowing] = useState<boolean>(false);
 
     const navigate = useNavigate();
     
@@ -35,26 +34,18 @@ const RegisterPage = () => {
                 size={'default'}
                 onPointerEnterCapture={undefined} 
                 onPointerLeaveCapture={undefined}               
-                 />
-            <Input
-                type={'email'}
+                />
+            <EmailInput
                 placeholder={'E-mail'}
                 onChange={e => setEmail(e.target.value)}
                 value={email}
-                size={'default'}
-                onPointerEnterCapture={undefined} 
-                onPointerLeaveCapture={undefined}               
-                 />
-            <Input
-                type={'password'}
+                size={'default'}            
+                />
+            <PasswordInput
                 placeholder={'Пароль'}
                 onChange={e => setPassword(e.target.value)}
                 value={password}
-                size={'default'}
-                onPointerEnterCapture={undefined} 
-                onPointerLeaveCapture={undefined}
-                icon={isPasswordShowing ? 'HideIcon' : 'ShowIcon'} 
-                onIconClick={() => setIsPasswordShowing(!isPasswordShowing)}            
+                size={'default'}            
                 />
             <Button 
                 htmlType="button" 
