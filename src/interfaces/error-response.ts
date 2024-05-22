@@ -1,4 +1,4 @@
-export interface IResetPasswordResponse {
+export interface IErrorResponse {
     success: boolean,
     message: string,
 }

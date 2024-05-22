@@ -2,7 +2,6 @@ import { IIngredientsResponse } from "../interfaces/ingredients-response";
 import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import { IOrderRequest } from "../interfaces/order-request";
 import { IOrderResponse } from "../interfaces/order-response";
-import { IResetPasswordResponse } from "../interfaces/reset-password-response";
 import { IAuthResponse } from "../interfaces/auth-response";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
@@ -17,11 +16,11 @@ export const login = (email: string, password: string) : Promise<IAuthResponse> 
         body: JSON.stringify({ email, password }),
     };
 
-    return sendRequest(`${URL}/login`, request)
+    return sendRequest(`${URL}/auth/login`, request)
         .then((response) => response as IAuthResponse);
 }
 
-export const logout = (token: string) : Promise<IResetPasswordResponse> => {
+export const logout = (token: string) : Promise<IAuthResponse> => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -31,8 +30,8 @@ export const logout = (token: string) : Promise<IResetPasswordResponse> => {
         body: JSON.stringify({ token }),
     };
 
-    return sendRequest(`${URL}/login`, request)
-        .then((response) => response as IResetPasswordResponse);
+    return sendRequest(`${URL}/auth/logout`, request)
+        .then((response) => response as IAuthResponse);
 }
 
 export const refreshToken = (token: string) : Promise<IAuthResponse> => {
@@ -45,7 +44,7 @@ export const refreshToken = (token: string) : Promise<IAuthResponse> => {
         body: JSON.stringify({ token }),
     };
 
-    return sendRequest(`${URL}/token`, request)
+    return sendRequest(`${URL}/auth/token`, request)
         .then((response) => response as IAuthResponse);
 }
 
@@ -59,11 +58,11 @@ export const register = (email: string, name: string, password: string) : Promis
         body: JSON.stringify({ email, name, password }),
     };
 
-    return sendRequest(`${URL}/register`, request)
+    return sendRequest(`${URL}/auth/register`, request)
         .then((response) => response as IAuthResponse);
 }
 
-export const sendPasswordResetCode = (email: string) : Promise<IResetPasswordResponse> => {
+export const sendPasswordResetCode = (email: string) : Promise<IAuthResponse> => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -74,10 +73,10 @@ export const sendPasswordResetCode = (email: string) : Promise<IResetPasswordRes
     };
 
     return sendRequest(`${URL}/password-reset`, request)
-        .then((response) => response as IResetPasswordResponse);
+        .then((response) => response as IAuthResponse);
 }
 
-export const resetPassword = (password: string, token: string) : Promise<IResetPasswordResponse> => {
+export const resetPassword = (password: string, token: string) : Promise<IAuthResponse> => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -88,7 +87,20 @@ export const resetPassword = (password: string, token: string) : Promise<IResetP
     };
 
     return sendRequest(`${URL}/password-reset/reset`, request)
-        .then((response) => response as IResetPasswordResponse);
+        .then((response) => response as IAuthResponse);
+}
+
+export const getUser = (token: string) : Promise<IAuthResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Authorization', `Bearer ${token}`);
+    
+    const request: RequestInit = {
+        method: 'GET',
+        headers,
+    };
+
+    return sendRequest(`${URL}/auth/user`, request)
+        .then((response) => response as IAuthResponse);
 }
 
 export const getIngredients = () : Promise<IIngredientData[]> => {

@@ -1,13 +1,9 @@
-import { Provider } from "react-redux";
 import Main from "../../components/main/main";
-import { store } from "../../services";
 
 const MainPage = () => {
-    return (
-       <Provider store={store}>
-          <Main />
-       </Provider>
-    );
+   return (
+      <Main />
+   );
  }
  
  export default MainPage;
