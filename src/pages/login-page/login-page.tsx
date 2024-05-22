@@ -1,11 +1,22 @@
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import styles from './login-page.module.css';
+import { AuthContext } from '../../services/auth';
 
 const LoginPage = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const { login, ...auth } = useContext(AuthContext);
+
+    if (auth.user) {
+        return (<Navigate to={'/'} replace />);
+    }
+
+    const onLogin = () => {
+        login(email, password);
+    }
 
     return (
         <div className={styles.loginFormWrapper}>
@@ -29,7 +40,8 @@ const LoginPage = () => {
                 type="primary" 
                 size="medium" 
                 extraClass='mb-15'
-                disabled={!email || !password}>
+                disabled={!email || !password}
+                onClick={onLogin}>
                 Войти
             </Button>
             <div>

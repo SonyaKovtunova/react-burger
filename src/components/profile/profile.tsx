@@ -1,12 +1,33 @@
-import { EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
+import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useContext, useEffect, useState } from "react";
 import styles from './profile.module.css';
+import { AuthContext } from "../../services/auth";
 
 const Profile = () => {
-    const [name, setName] = useState<string>('Тест');
-    const [isNameDisabled, setIsNameDisabled] = useState(true);
-    const [email, setEmail] = useState<string>('test@mail.com');
-    const [password, setPassword] = useState<string>('12345');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('password');
+
+    const { user, updateUser } = useContext(AuthContext);
+    
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+        }
+    }, [user]);
+
+    const onCancel = () => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+            setPassword('password');
+        }
+    }
+
+    const onSave = () => {
+        updateUser(email, name, password);
+    }
 
     return (
         <div className={styles.profile}>
@@ -18,7 +39,6 @@ const Profile = () => {
                 size={'default'}
                 onPointerEnterCapture={undefined}
                 onPointerLeaveCapture={undefined}
-                disabled={isNameDisabled}
                 icon='EditIcon'
                 />
             <EmailInput
@@ -35,6 +55,14 @@ const Profile = () => {
                 size={'default'}
                 icon="EditIcon"
                 />
+            <div className={styles.buttonsWrapper}>
+                <Button htmlType="button" type="secondary" size="medium" onClick={onCancel}>
+                    Отмена
+                </Button>
+                <Button htmlType="button" type="primary" size="medium" disabled={!email || !name || !password} onClick={onSave}>
+                    Сохранить
+                </Button>
+            </div>
         </div>
     );
 }

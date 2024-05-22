@@ -1,7 +1,19 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import styles from './profile-page.module.css';
+import { useContext } from "react";
+import { AuthContext } from "../../services/auth";
 
 const ProfilePage = () => {
+    const { logout, ...auth } = useContext(AuthContext);
+
+    if (!auth.user) {
+        return (<Navigate to={'/login'} replace />);
+    }
+
+    const onLogout = () => {
+        logout();
+    }
+
     return (
         <div className={styles.profilePageWrapper}>
             <div className={styles.navigation}>
@@ -15,9 +27,9 @@ const ProfilePage = () => {
                         <p className={`text text_type_main-medium ${isActive ? '': 'text_color_inactive'}`}>История заказов</p>
                     )}
                 </NavLink> 
-                <a className={`${styles.link} mt-6`}>
+                <Link to={'/'} className={`${styles.link} mt-6`} onClick={onLogout}>
                     <p className='text text_type_main-medium text_color_inactive'>Выход</p>
-                </a>
+                </Link>
                 <p className='text text_type_main-default text_color_inactive mt-20'>
                     В этом разделе вы можете
                 </p>

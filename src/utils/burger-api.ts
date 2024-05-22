@@ -103,6 +103,21 @@ export const getUser = (token: string) : Promise<IAuthResponse> => {
         .then((response) => response as IAuthResponse);
 }
 
+export const updateUser = (email: string, name: string, password: string, token: string) : Promise<IAuthResponse> => {
+    const headers: HeadersInit = new Headers();
+    headers.set('Content-Type', 'application/json');
+    headers.set('Authorization', `Bearer ${token}`);
+
+    const request: RequestInit = {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ email, name, password }),
+    };
+
+    return sendRequest(`${URL}/auth/user`, request)
+        .then((response) => response as IAuthResponse);
+}
+
 export const getIngredients = () : Promise<IIngredientData[]> => {
     return sendRequest(`${URL}/ingredients`)
         .then((response) => {

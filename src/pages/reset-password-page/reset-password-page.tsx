@@ -1,23 +1,28 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
 import { resetPassword } from "../../utils/burger-api";
+import { AuthContext } from "../../services/auth";
 
 const ResetPasswordPage = () => {
     const [password, setPassword] = useState<string>('');
     const [token, setToken] = useState<string>('');
-
     const navigate = useNavigate();
 
-    const onResetPassword = async () => {
-        try {
-            const data = await resetPassword(password, token);
+    const { register, canResetPassword, ...auth } = useContext(AuthContext);
 
-            if (data.success) {
-                navigate('/', {replace: true});
-            }
-        } catch (error) { }
+    if (auth.user) {
+        return (<Navigate to={'/'} replace />);
+    }
+
+    if (!canResetPassword) {
+        return (<Navigate to={'/forgot-password'} replace />);
+    }
+
+    const onResetPassword = async () => {
+        await resetPassword(password, token);  
+        navigate('login', { replace: true });
     }
 
     return (

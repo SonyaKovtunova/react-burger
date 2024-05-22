@@ -6,28 +6,32 @@ import ForgotPasswordPage from './pages/forgot-password-page/forgot-password-pag
 import ResetPasswordPage from './pages/reset-password-page/reset-password-page';
 import AppHeader from './components/app-header/app-header';
 import ProfilePage from './pages/profile-page/profile-page';
-import Profile from './components/auth/profile/profile';
-import Orders from './components/auth/orders/orders';
-import Order from './components/auth/order/order';
+import Profile from './components/profile/profile';
+import Orders from './components/orders/orders';
+import Order from './components/order/order';
+import { ProtectedRouteElement } from './components/protected-route';
+import AuthProvider from './services/auth';
 
 const App = () => {
    return (
       <>
-         <BrowserRouter>
-            <AppHeader />
-            <Routes>
-               <Route path="/" element={<MainPage />} />
-               <Route path="/login" element={<LoginPage/>} />
-               <Route path="/register" element={<RegisterPage/>} />
-               <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-               <Route path="/reset-password" element={<ResetPasswordPage/>} />
-               <Route path="/profile" element={<ProfilePage/>}>
-                  <Route path="" element={<Profile />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="orders/:orderNumber" element={<Order />} />
-               </Route>
-            </Routes>
-         </BrowserRouter>
+         <AuthProvider>
+            <BrowserRouter>
+               <AppHeader />
+               <Routes>
+                  <Route path="/" element={<MainPage />} />
+                  <Route path="/login" element={<LoginPage/>} />
+                  <Route path="/register" element={<RegisterPage/>} />
+                  <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+                  <Route path="/reset-password" element={<ResetPasswordPage/>} />
+                  <Route path="/profile" element={<ProtectedRouteElement children={<ProfilePage/>}/>}>
+                     <Route index element={<Profile />} />
+                     <Route path="orders" element={<Orders />} />
+                     <Route path="orders/:orderNumber" element={<Order />} />
+                  </Route>   
+               </Routes>
+            </BrowserRouter>
+         </AuthProvider>
       </>
    );
 }
