@@ -14,6 +14,7 @@ import AuthProvider from './services/auth';
 import IngredientDetailsModal from './components/burger-ingredients/ingerdient-details-modal/ingredient-details-modal';
 import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-details-page';
 import Main from './components/main/main';
+import NotFoundPage from './pages/not-found-page/not-found-page';
 
 const App = () => {
    const location = useLocation();
@@ -37,6 +38,7 @@ const App = () => {
                      <Route path="orders" element={<Orders />} />
                      <Route path="orders/:orderNumber" element={<Order />} />
                   </Route>
+                  <Route path='*' element={<NotFoundPage />} />
                </Routes>
                { 
                   location.state?.background 
