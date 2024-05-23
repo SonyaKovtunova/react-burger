@@ -1,8 +1,10 @@
-import Main from "../../components/main/main";
+import { Outlet } from "react-router-dom";
 
 const MainPage = () => {
    return (
-      <Main />
+      <>
+         <Outlet />
+      </>
    );
  }
  
