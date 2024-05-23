@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/auth';
 
-export const ProtectedRouteElement = (props : { children: ReactElement }) => {
+export const AuthProtectedRoute = (props : { children: ReactElement }) => {
     let { getUser, refreshToken, error, ...auth } = useContext(AuthContext);
     const [isUserLoaded, setUserLoaded] = useState(false);
 

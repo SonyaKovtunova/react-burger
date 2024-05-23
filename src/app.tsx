@@ -9,12 +9,13 @@ import ProfilePage from './pages/profile-page/profile-page';
 import Profile from './components/profile/profile';
 import Orders from './components/orders/orders';
 import Order from './components/order/order';
-import { ProtectedRouteElement } from './components/protected-route';
+import { AuthProtectedRoute } from './components/auth-protected-route';
 import AuthProvider from './services/auth';
 import IngredientDetailsModal from './components/burger-ingredients/ingerdient-details-modal/ingredient-details-modal';
 import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-details-page';
 import Main from './components/main/main';
 import NotFoundPage from './pages/not-found-page/not-found-page';
+import { UnauthProtectedRoute } from './components/unauth-protected-route';
 
 const App = () => {
    const location = useLocation();
@@ -29,11 +30,11 @@ const App = () => {
                      <Route index element={<Main />} />
                      <Route path="/ingredients/:id" element={<IngredientDetailsPage />}/>
                   </Route>
-                  <Route path="/login" element={<LoginPage/>} />
-                  <Route path="/register" element={<RegisterPage/>} />
-                  <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-                  <Route path="/reset-password" element={<ResetPasswordPage/>} />
-                  <Route path="/profile" element={<ProtectedRouteElement children={<ProfilePage/>}/>}>
+                  <Route path="/login" element={<UnauthProtectedRoute children={<LoginPage />} />} />
+                  <Route path="/register" element={<UnauthProtectedRoute children={<RegisterPage />} />} />
+                  <Route path="/forgot-password" element={<UnauthProtectedRoute children={<ForgotPasswordPage />} />} />
+                  <Route path="/reset-password" element={<UnauthProtectedRoute children={<ResetPasswordPage />} />} />
+                  <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
                      <Route index element={<Profile />} />
                      <Route path="orders" element={<Orders />} />
                      <Route path="orders/:orderNumber" element={<Order />} />

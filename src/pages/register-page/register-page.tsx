@@ -1,5 +1,5 @@
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import styles from './register-page.module.css';
 import { AuthContext } from '../../services/auth';
@@ -8,12 +8,7 @@ const RegisterPage = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-
-    const { register, ...auth } = useContext(AuthContext);
-
-    if (auth.user) {
-        return (<Navigate to={'/'} replace />);
-    }
+    const { register } = useContext(AuthContext);
     
     const onRegister = () => {
         register(email, name, password);

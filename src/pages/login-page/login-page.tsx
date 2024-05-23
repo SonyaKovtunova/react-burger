@@ -1,18 +1,13 @@
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useContext, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styles from './login-page.module.css';
 import { AuthContext } from '../../services/auth';
 
 const LoginPage = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-
-    const { login, ...auth } = useContext(AuthContext);
-
-    if (auth.user) {
-        return (<Navigate to={'/'} replace />);
-    }
+    const { login } = useContext(AuthContext);
 
     const onLogin = () => {
         login(email, password);

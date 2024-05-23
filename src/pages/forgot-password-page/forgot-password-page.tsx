@@ -1,18 +1,13 @@
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useContext, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
 import { AuthContext } from "../../services/auth";
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState<string>('');
     const navigate = useNavigate();
-
-    const { sendPasswordResetCode, ...auth } = useContext(AuthContext);
-
-    if (auth.user) {
-        return (<Navigate to={'/'} replace />);
-    }
+    const { sendPasswordResetCode } = useContext(AuthContext);
 
     const onSendPasswordResetCode = async () => {
         await sendPasswordResetCode(email);

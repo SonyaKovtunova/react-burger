@@ -9,12 +9,7 @@ const ResetPasswordPage = () => {
     const [password, setPassword] = useState<string>('');
     const [token, setToken] = useState<string>('');
     const navigate = useNavigate();
-
-    const { register, canResetPassword, ...auth } = useContext(AuthContext);
-
-    if (auth.user) {
-        return (<Navigate to={'/'} replace />);
-    }
+    const { canResetPassword } = useContext(AuthContext);
 
     if (!canResetPassword) {
         return (<Navigate to={'/forgot-password'} replace />);
