@@ -2,7 +2,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IIngredientData } from '../../interfaces/ingredient-data-interface';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
 import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
 import BunItem from './bun-item/bun-item';
+import { AuthContext } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 const BurgerConstructor = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
@@ -24,6 +26,9 @@ const BurgerConstructor = () => {
     const bun = useSelector<IStoreState, IIngredientData | null>(store => store.burgerConstructor.bun);
 
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const {user, ...auth }= useContext(AuthContext);
 
     useEffect(() => {
         if (orderNumberIsCreated) {
@@ -43,6 +48,11 @@ const BurgerConstructor = () => {
     });
 
     const createOrder = useCallback(() => {
+        if (!user) {
+            navigate('login');
+            return;
+        }
+
         const request: IOrderRequest = {
             ingredients: ingredients.map(item => item._id)
         };

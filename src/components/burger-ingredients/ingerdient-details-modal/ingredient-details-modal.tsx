@@ -33,6 +33,7 @@ const IngredientDetailsModal = () => {
     const closeModal = useCallback(() => {
         if (selectedIngredient) {
             dispatch(clearSelectedIngredient());
+            navigate(-1);
         }
     }, [selectedIngredient]);
     
