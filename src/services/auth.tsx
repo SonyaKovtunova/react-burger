@@ -1,15 +1,13 @@
 import { ReactElement, createContext, useEffect, useState } from 'react';
 import { deleteCookie, getCookie, setCookie } from '../utils/cookies';
-import { getUser, login, logout, refreshToken, register, resetPassword, sendPasswordResetCode, updateUser } from '../utils/burger-api';
 import { IUser } from '../interfaces/user';
-import { IErrorResponse } from '../interfaces/error-response';
+import { sendGetUserRequest, sendLoginRequest, sendLogoutRequest, sendPasswordResetCodeRequest, sendRegisterRequest, sendResetPasswordRequest, sendUpdateUserRequest } from '../utils/burger-api';
+import { IAuthResponse } from '../interfaces/auth-response';
 
 export interface IAuthContext {
     user: IUser | null,
-    error: string | null,
     getUser: () => Promise<void>,
     updateUser: (email: string, name: string, password: string) => Promise<void>,
-    refreshToken : () => Promise<void>,
     login: (email: string, password: string) => Promise<void>,
     register: (email: string, name: string, password: string) => Promise<void>,
     sendPasswordResetCode: (email: string) => Promise<void>,
@@ -20,10 +18,8 @@ export interface IAuthContext {
 
 export const AuthContext = createContext<IAuthContext>({
     user: null,
-    error: null,
     getUser: async () => {},
     updateUser: async () => {},
-    refreshToken: async () => {},
     login: async () => {},
     register: async () => {},
     sendPasswordResetCode: async () => {},
@@ -31,6 +27,11 @@ export const AuthContext = createContext<IAuthContext>({
     logout: async () => {},
     canResetPassword: false,
 });
+
+const setTokens = (data: IAuthResponse) => {
+  updateRefreshToken(data.refreshToken);
+  updateAccessToken(data.accessToken);
+}
 
 const updateRefreshToken = (refreshToken: string) => {
   if (refreshToken) {
@@ -51,152 +52,94 @@ const updateAccessToken = (accessToken: string) => {
 
 const AuthProvider = (props : { children: ReactElement }) => {
   const [user, setUser] = useState<IUser | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const authContextValue: IAuthContext = {
     user,
-    error,
     getUser: async () => {
       setUser(null);
-      setError(null);
 
-      const token = localStorage.getItem('token');
-      if (!token) {
+      const refreshToken = getCookie('token');
+      const accessToken = localStorage.getItem('token');
+      if (!refreshToken || !accessToken) {
         return;
       }
     
       try {
-        const data = await getUser(token);
+        const data = await sendGetUserRequest(accessToken, refreshToken);
+
+        setTokens(data);
         setUser(data.user);
-        setError(!data.success ? data.message : null);
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
+      } catch(error) { }
     },
     updateUser: async (email, name, password) => {
-      const token = localStorage.getItem('token'); 
-
-      if (!token) {
+      const refreshToken = getCookie('token');
+      const accessToken = localStorage.getItem('token');
+      if (!refreshToken || !accessToken) {
         return;
       }
 
       try {
-        const data = await updateUser(email, name, password, token);
+        const data = await sendUpdateUserRequest(email, name, password, accessToken, refreshToken);
+
+        setTokens(data);
         setUser(data.user);
-        setError(!data.success ? data.message : null);
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
-    },
-    refreshToken: async () => {
-      setUser(null);
-      setError(null);
-
-      const token = getCookie('token');
-      if (!token) {
-        return;
-      }
-      
-      try {
-        const data = await refreshToken(token);
-          
-        updateRefreshToken(data.refreshToken);
-        updateAccessToken(data.accessToken);
-        setError(!data.success ? data.message : null);  
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
-      
+      } catch(error) { }
     },
     login: async (email, password) => {
       setUser(null);
-      setError(null);
 
       try {
-        const data = await login(email, password);
+        const data = await sendLoginRequest(email, password);
           
-        updateRefreshToken(data.refreshToken);
-        updateAccessToken(data.accessToken);
+        setTokens(data);
         setUser(data.user);
-        setError(!data.success ? data.message : null);
-      } catch (error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
+      } catch (error) { }
     },
     register: async (email, name, password) => {
       setUser(null);
-      setError(null);
 
       try {
-        const data = await register(email, name, password);
+        const data = await sendRegisterRequest(email, name, password);
 
-        updateRefreshToken(data.refreshToken);
-        updateAccessToken(data.accessToken);
+        setTokens(data);
         setUser(data.user);
-        setError(!data.success ? data.message : null);  
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
-      
+      } catch(e) { }
     },
     sendPasswordResetCode: async (email) => {
-      var data = await sendPasswordResetCode(email);
+      var data = await sendPasswordResetCodeRequest(email);
 
       try {
         if (data.success) {
           localStorage.setItem('waitForResetPassword', '1');
         }
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
-      
+      } catch(e) { }
     },
     resetPassword: async (password, token) => {
       try {
-        await resetPassword(password, token);
+        await sendResetPasswordRequest(password, token);
         localStorage.removeItem('waitForResetPassword');  
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
+      } catch(e) { }
     },
     logout: async () => {
       setUser(null);
-      setError(null);
+      localStorage.removeItem('token');
 
       const token = getCookie('token');
-  
       if (!token) {
-        localStorage.removeItem('token');
         return;
       }
+
+      deleteCookie('token');
       
       try {
-        await logout(token);
-      } catch(error) {
-        const errorResponse = error as IErrorResponse;
-        setError(errorResponse.message);
-      }
-      
-      deleteCookie('token');
-      localStorage.removeItem('token');
+        await sendLogoutRequest(token);
+      } catch(e) { }
     },
     canResetPassword: !!localStorage.getItem('waitForResetPassword'),
   }
 
   const init = async () => {
     await authContextValue.getUser();
-
-    if (authContextValue.error) {
-      await authContextValue.refreshToken();
-      await authContextValue.getUser();
-    }
   };
 
   useEffect(() => {

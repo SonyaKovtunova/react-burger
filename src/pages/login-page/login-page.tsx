@@ -1,16 +1,16 @@
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './login-page.module.css';
 import { AuthContext } from '../../services/auth';
+import { useForm } from '../../components/user-form';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [ form, _, onChange ] = useForm({ email: '', password: '' });
     const { login } = useContext(AuthContext);
 
     const onLogin = () => {
-        login(email, password);
+        login(form['email'], form['password']);
     }
 
     return (
@@ -20,22 +20,24 @@ const LoginPage = () => {
             </p>
             <EmailInput
                 placeholder={'E-mail'}
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-                size={'default'}             
+                onChange={e => onChange('email', e.target.value)}
+                value={form['email']}
+                size={'default'}
+                autoComplete='email'
                 />
             <PasswordInput
                 placeholder={'Пароль'}
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                size={'default'}          
+                onChange={e => onChange('password', e.target.value)}
+                value={form['password']}
+                size={'default'} 
+                autoComplete='current-password'   
                 />
             <Button 
                 htmlType="button" 
                 type="primary" 
                 size="medium" 
                 extraClass='mb-15'
-                disabled={!email || !password}
+                disabled={!form['email'] || !form['password']}
                 onClick={onLogin}>
                 Войти
             </Button>

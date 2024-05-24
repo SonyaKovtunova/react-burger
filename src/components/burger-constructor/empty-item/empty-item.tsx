@@ -7,11 +7,10 @@ interface IEmptyItemProps {
 }
 
 const EmptyItem = ( { isBun = false, isTop = true }: IEmptyItemProps) => {
-    const classNames = useMemo(() => `${emptyItemStyles.item} ${isBun ? (isTop ? emptyItemStyles.top : emptyItemStyles.bottom) : ''}`, []);
     const text = useMemo (() => isBun ? (isTop ? 'Верхняя булка' : 'Нижняя булка') : 'Ингредиенты', []);
 
     return (
-        <div className={classNames}>
+        <div className={emptyItemStyles.itemWrapper}>
             <div></div>
             <div className={`${emptyItemStyles.item} ${isBun ? (isTop ? emptyItemStyles.top : emptyItemStyles.bottom) : ''}`} >
                 <p className="text text_type_main-default text_color_inactive">

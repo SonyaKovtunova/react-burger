@@ -3,17 +3,11 @@ import { ReactElement, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/auth';
 
 export const AuthProtectedRoute = (props : { children: ReactElement }) => {
-    let { getUser, refreshToken, error, ...auth } = useContext(AuthContext);
+    let { getUser, ...auth } = useContext(AuthContext);
     const [isUserLoaded, setUserLoaded] = useState(false);
 
     const init = async () => {
         await getUser();
-
-        if (error) {
-            await refreshToken();
-            await getUser();
-        }
-        
         setUserLoaded(true);
     };
 

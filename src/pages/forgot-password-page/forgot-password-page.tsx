@@ -1,16 +1,17 @@
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
 import { AuthContext } from "../../services/auth";
+import { useForm } from "../../components/user-form";
 
 const ForgotPasswordPage = () => {
-    const [email, setEmail] = useState<string>('');
+    const [ form, _, onChange ] = useForm({ email: '' });
     const navigate = useNavigate();
     const { sendPasswordResetCode } = useContext(AuthContext);
 
     const onSendPasswordResetCode = async () => {
-        await sendPasswordResetCode(email);
+        await sendPasswordResetCode(form['email']);
         navigate('/reset-password', { replace: true });
     }
 
@@ -21,16 +22,17 @@ const ForgotPasswordPage = () => {
             </p>
             <EmailInput
                 placeholder={'Укажите e-mail'}
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-                size={'default'}              
+                onChange={e => onChange('email', e.target.value)}
+                value={form['email']}
+                size={'default'}   
+                autoComplete='email'            
                 />
             <Button 
                 htmlType="button" 
                 type="primary" 
                 size="medium" 
                 extraClass='mb-15' 
-                disabled={!email} 
+                disabled={!form['email']} 
                 onClick={onSendPasswordResetCode}>
                 Восстановить
             </Button>

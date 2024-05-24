@@ -1,17 +1,16 @@
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import styles from './register-page.module.css';
 import { AuthContext } from '../../services/auth';
+import { useForm } from '../../components/user-form';
 
 const RegisterPage = () => {
-    const [name, setName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [ form, _, onChange ] = useForm({ name: '', email: '', password: '' });
     const { register } = useContext(AuthContext);
     
     const onRegister = () => {
-        register(email, name, password);
+        register(form['email'], form['name'], form['password']);
     }
 
     return (
@@ -22,30 +21,33 @@ const RegisterPage = () => {
             <Input
                 type={'text'}
                 placeholder={'Имя'}
-                onChange={e => setName(e.target.value)}
-                value={name}
+                onChange={(e) => onChange('name', e.target.value)}
+                value={form['name']}
                 size={'default'}
                 onPointerEnterCapture={undefined} 
-                onPointerLeaveCapture={undefined}               
+                onPointerLeaveCapture={undefined}  
+                autoComplete='name'              
                 />
             <EmailInput
                 placeholder={'E-mail'}
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-                size={'default'}            
+                onChange={(e) => onChange('email', e.target.value)}
+                value={form['email']}
+                size={'default'}
+                autoComplete='email' 
                 />
             <PasswordInput
                 placeholder={'Пароль'}
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                size={'default'}            
+                onChange={(e) => onChange('password', e.target.value)}
+                value={form['password']}
+                size={'default'}      
+                autoComplete='new-password'                   
                 />
             <Button 
                 htmlType="button" 
                 type="primary" 
                 size="medium" 
                 extraClass='mb-15' 
-                disabled={!email || !name || !password}
+                disabled={!form['email'] || !form['name'] || !form['password']}
                 onClick={onRegister}
                 >
                 Зарегистрироваться

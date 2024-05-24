@@ -6,11 +6,10 @@
 }
 
 .item {
-    width: 100%;
     height: 80px;
     border-radius: var(--common-border-radius-s);
     min-height: 80px;
-    max-width: 536px;
+    width: 536px;
     border: dashed 1px var(--text-inactive-color);
     display: flex;
     justify-content: center;

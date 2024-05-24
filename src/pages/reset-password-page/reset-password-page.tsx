@@ -1,13 +1,13 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
-import { resetPassword } from "../../utils/burger-api";
+import { sendResetPasswordRequest } from "../../utils/burger-api";
 import { AuthContext } from "../../services/auth";
+import { useForm } from "../../components/user-form";
 
 const ResetPasswordPage = () => {
-    const [password, setPassword] = useState<string>('');
-    const [token, setToken] = useState<string>('');
+    const [ form, _, onChange ] = useForm({ token: '', password: '' });
     const navigate = useNavigate();
     const { canResetPassword } = useContext(AuthContext);
 
@@ -16,7 +16,7 @@ const ResetPasswordPage = () => {
     }
 
     const onResetPassword = async () => {
-        await resetPassword(password, token);  
+        await sendResetPasswordRequest(form['password'], form['token']);  
         navigate('login', { replace: true });
     }
 
@@ -27,15 +27,16 @@ const ResetPasswordPage = () => {
             </p>
             <PasswordInput
                 placeholder={'Введите новый пароль'}
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                size={'default'}          
+                onChange={(e) => onChange('password', e.target.value)}
+                value={form['password']}
+                size={'default'}       
+                autoComplete='new-password'    
                 />
             <Input
                 type={'text'}
                 placeholder={'Введите код из письма'}
-                onChange={e => setToken(e.target.value)}
-                value={token}
+                onChange={(e) => onChange('token', e.target.value)}
+                value={form['token']}
                 size={'default'}
                 onPointerEnterCapture={undefined} 
                 onPointerLeaveCapture={undefined}               
@@ -45,7 +46,7 @@ const ResetPasswordPage = () => {
                 type="primary" 
                 size="medium" 
                 extraClass='mb-15' 
-                disabled={!password || !token} 
+                disabled={!form['password'] || !form['token']} 
                 onClick={onResetPassword}>
                 Сохранить
             </Button>
