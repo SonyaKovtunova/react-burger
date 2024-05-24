@@ -6,6 +6,7 @@ import { setSelectedIngredient } from "../../../../services/burger-ingredients";
 import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import { CATEGORIES, INGREDIENT_DND_NAME } from "../../../../utils/constants";
+import { Link, useLocation } from "react-router-dom";
 
 interface IIngredientProps {
     ingredient: IIngredientData,
@@ -27,17 +28,21 @@ const Ingredient = (props: IIngredientProps) => {
         item: { data: props.ingredient },
     });
     
+    const location = useLocation();
+    
     const selectIngredient = () => {
         dispatch(setSelectedIngredient(props.ingredient));
     }
 
     return (
-        <div className={ingredientStyles.ingredient} onClick={selectIngredient} ref={dragRef}>
-            <img className={ingredientStyles.imageWrapper} src={props.ingredient.image}/>
-            <p className="text text_type_main-default mt-1">{props.ingredient.price} <CurrencyIcon type="primary" /></p>
-            <p className={`text text_type_main-default mt-1 ${ingredientStyles.textCenter}`}>{props.ingredient.name}</p>
-            { count > 0 && <Counter count={count} size="default" />}
-        </div>
+        <Link to={`/ingredients/${props.ingredient._id}`} state={{ background: location }} className={ingredientStyles.link}>
+            <div className={ingredientStyles.ingredient} onClick={selectIngredient} ref={dragRef}>
+                <img className={ingredientStyles.imageWrapper} src={props.ingredient.image}/>
+                <p className="text text_type_main-default mt-1">{props.ingredient.price} <CurrencyIcon type="primary" /></p>
+                <p className={`text text_type_main-default mt-1 ${ingredientStyles.textCenter}`}>{props.ingredient.name}</p>
+                { count > 0 && <Counter count={count} size="default" />}
+            </div>    
+        </Link>
     );
 }
   

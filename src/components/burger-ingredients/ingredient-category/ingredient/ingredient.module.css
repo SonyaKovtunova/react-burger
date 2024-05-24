@@ -12,3 +12,8 @@
 .textCenter {
     text-align: center;
 }
+
+.link {
+    color: unset;
+    text-decoration: none;
+}

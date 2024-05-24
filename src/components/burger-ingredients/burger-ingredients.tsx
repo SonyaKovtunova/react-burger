@@ -2,30 +2,21 @@ import { SyntheticEvent, useCallback, useEffect } from "react";
 import IngredientCategory from "./ingredient-category/ingredient-category";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerIngredientsStyles from './burger-ingredients.module.css';
-import { IIngredientData } from "../../interfaces/ingredient-data-interface";
 import { ICategoryData } from "../../interfaces/category-data-interface";
-import IngredientDetails from "./ingredient-details/ingredient-details";
-import Modal from "../modal/modal";
 import { useSelector } from "react-redux";
-import { clearSelectedIngredient, getIngredientsThunk, setTab } from "../../services/burger-ingredients";
+import { getIngredientsThunk, setTab } from "../../services/burger-ingredients";
 import { IStoreState, getCategoriesState, useAppDispatch } from "../../services";
 import { CATEGORIES } from "../../utils/constants";
 
 const BurgerIngredients = () => {
-
     const categories = useSelector<IStoreState, ICategoryData[]>(getCategoriesState);
-
     const currentTab = useSelector<IStoreState, string>(store => store.burgerIngredients.currentTab);
-    const selectedIngredient  = useSelector<IStoreState, IIngredientData | null>(store => store.burgerIngredients.selectedIngredient);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(getIngredientsThunk());
     }, [dispatch]);
-
-    useEffect(() => {
-    }, [ selectedIngredient ]);
     
     const getTabs = useCallback(() => {
         return (<div className={burgerIngredientsStyles.tabs}>
@@ -42,12 +33,6 @@ const BurgerIngredients = () => {
             }
         </div>);
     }, [currentTab]);
-
-    const closeModal = useCallback(() => {
-        if (selectedIngredient) {
-            dispatch(clearSelectedIngredient());
-        }
-    }, [selectedIngredient]);
 
     let listEl: HTMLDivElement;
     let categ: HTMLDivElement[] = [];
@@ -84,11 +69,6 @@ const BurgerIngredients = () => {
                     })
                 }
             </div>
-            { selectedIngredient &&
-                <Modal title='Детали ингредиента' onClose={closeModal}>
-                    <IngredientDetails ingredient={selectedIngredient} />
-                </Modal>
-            }
         </>
     );
 }
