@@ -132,15 +132,13 @@ const sendRequestWithRefreshToken = (url: string, accessToken: string, refreshTo
     return sendRequest(url, options)
         .then(data => ({ ...data, accessToken : `Bearer ${accessToken}`, refreshToken: refreshToken }))
         .catch(err => {
-            debugger
             const errorResponse = err as IErrorResponse;
 
             if (errorResponse.message === 'jwt expired') {
                 return sendRefreshTokenRequest(refreshToken)
                     .then(refreshTokenData => {
-                        debugger
                         if (refreshTokenData.success) {
-                            options = resetHeader(options, 'Authorization', `Bearer ${refreshTokenData.accessToken}`);
+                            options = resetHeader(options, 'Authorization', refreshTokenData.accessToken);
                             return sendRequest(url, options)
                                 .then(data => ({ 
                                     ...data, 
