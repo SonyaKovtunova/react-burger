@@ -15,7 +15,6 @@ import IngredientDetailsModal from './components/burger-ingredients/ingerdient-d
 import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-details-page';
 import Main from './components/main/main';
 import NotFoundPage from './pages/not-found-page/not-found-page';
-import { UnauthProtectedRoute } from './components/unauth-protected-route';
 import { FC, useEffect } from 'react';
 import { useAppDispatch } from './services';
 import { getIngredientsThunk } from './services/burger-ingredients';
@@ -39,10 +38,10 @@ const App: FC = () => {
                      <Route index element={<Main />} />
                      <Route path="/ingredients/:id" element={<IngredientDetailsPage />}/>
                   </Route>
-                  <Route path="/login" element={<UnauthProtectedRoute children={<LoginPage />} />} />
-                  <Route path="/register" element={<UnauthProtectedRoute children={<RegisterPage />} />} />
-                  <Route path="/forgot-password" element={<UnauthProtectedRoute children={<ForgotPasswordPage />} />} />
-                  <Route path="/reset-password" element={<UnauthProtectedRoute children={<ResetPasswordPage />} />} />
+                  <Route path="/login" element={<AuthProtectedRoute children={<LoginPage />} anonymous />} />
+                  <Route path="/register" element={<AuthProtectedRoute children={<RegisterPage />} anonymous />} />
+                  <Route path="/forgot-password" element={<AuthProtectedRoute children={<ForgotPasswordPage />} anonymous />} />
+                  <Route path="/reset-password" element={<AuthProtectedRoute children={<ResetPasswordPage />} anonymous />} />
                   <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
                      <Route index element={<Profile />} />
                      <Route path="orders" element={<Orders />} />
