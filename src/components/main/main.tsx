@@ -1,16 +1,15 @@
-import { useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import mainStyles from './main.module.css';
 import { RevolvingDot } from 'react-loader-spinner';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { IStoreState } from '../../services';
+import { useAppSelector } from '../../services';
 import { FC } from 'react';
 
 const Main: FC = () => {
-    const ingredientsRequest = useSelector<IStoreState>(store => store.burgerIngredients.ingredientsRequest);
-    const orderNumberRequest = useSelector<IStoreState>(store => store.burgerConstructor.orderNumberRequest);
+    const ingredientsRequest = useAppSelector(store => store.burgerIngredients.ingredientsRequest);
+    const orderNumberRequest = useAppSelector(store => store.burgerConstructor.orderNumberRequest);
   
     return (
         <>

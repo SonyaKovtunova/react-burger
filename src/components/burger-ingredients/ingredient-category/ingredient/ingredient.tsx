@@ -1,9 +1,8 @@
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientStyles from './ingredient.module.css';
 import { IIngredientData } from "../../../../interfaces/ingredient-data-interface";
-import { IStoreState, useAppDispatch } from "../../../../services";
+import { useAppDispatch, useAppSelector } from "../../../../services";
 import { setSelectedIngredient } from "../../../../services/burger-ingredients";
-import { useSelector } from "react-redux";
 import { useDrag } from "react-dnd";
 import { CATEGORIES, INGREDIENT_DND_NAME } from "../../../../utils/constants";
 import { Link, useLocation } from "react-router-dom";
@@ -13,9 +12,8 @@ type TIngredientProps = {
     ingredient: IIngredientData;
 }
 
-const Ingredient: FC<TIngredientProps> = ({ ingredient }) => {
-    
-    const count = useSelector<IStoreState, number>(store => 
+const Ingredient: FC<TIngredientProps> = ({ ingredient }) => { 
+    const count = useAppSelector(store => 
         ingredient.type === CATEGORIES[0].type 
             && store.burgerConstructor.bun 
             && store.burgerConstructor.bun._id === ingredient._id 

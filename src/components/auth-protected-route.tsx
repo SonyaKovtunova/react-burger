@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { FC, ReactElement, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/auth';
 
@@ -9,6 +9,7 @@ type TAuthProtectedRouteProps = {
 export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children }) => {
     let { getUser, ...auth } = useContext(AuthContext);
     const [isUserLoaded, setUserLoaded] = useState(false);
+    const location = useLocation();
 
     const init = async () => {
         await getUser();
@@ -23,5 +24,5 @@ export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children }) =
         return null;
     }
 
-    return auth.user ? children : <Navigate to="/login" replace/>;
+    return auth.user ? children : <Navigate to="/login" state={{ from: location }}/>;
 }

@@ -16,11 +16,19 @@ import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-de
 import Main from './components/main/main';
 import NotFoundPage from './pages/not-found-page/not-found-page';
 import { UnauthProtectedRoute } from './components/unauth-protected-route';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useAppDispatch } from './services';
+import { getIngredientsThunk } from './services/burger-ingredients';
 
 const App: FC = () => {
    const location = useLocation();
 
+   const dispatch = useAppDispatch();
+
+   useEffect(() => {
+      dispatch(getIngredientsThunk());
+   }, [dispatch]);
+    
    return (
       <>
          <AuthProvider>
