@@ -1,11 +1,11 @@
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import styles from './register-page.module.css';
 import { AuthContext } from '../../services/auth';
 import { useForm } from '../../components/user-form';
 
-const RegisterPage = () => {
+const RegisterPage: FC = () => {
     const [ form, _, onChange ] = useForm({ name: '', email: '', password: '' });
     const { register } = useContext(AuthContext);
     

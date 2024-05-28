@@ -2,7 +2,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IIngredientData } from '../../interfaces/ingredient-data-interface';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import BunItem from './bun-item/bun-item';
 import { AuthContext } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
 
-const BurgerConstructor = () => {
+const BurgerConstructor: FC = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
     const ingredients = useSelector<IStoreState, IIngredientData[]>(store => store.burgerConstructor.ingredients);
@@ -28,7 +28,7 @@ const BurgerConstructor = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const {user, ...auth }= useContext(AuthContext);
+    const { user }= useContext(AuthContext);
 
     useEffect(() => {
         if (orderNumberIsCreated) {

@@ -1,14 +1,14 @@
 import { useSelector } from "react-redux";
 import { IIngredientData } from "../../interfaces/ingredient-data-interface";
 import { IStoreState, useAppDispatch } from "../../services";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import IngredientDetails from "../../components/burger-ingredients/ingredient-details/ingredient-details";
 import { getIngredientsThunk } from "../../services/burger-ingredients";
 import { RevolvingDot } from "react-loader-spinner";
 import styles from './ingredient-details-page.module.css';
 
-const IngredientDetailsPage = () => {
+const IngredientDetailsPage: FC = () => {
     const [selectedIngredient, setSelectedIngredient] = useState<IIngredientData | null>(null);
     const ingredients = useSelector<IStoreState, IIngredientData[]>(store => store.burgerIngredients.ingredients);
     const ingredientsRequest = useSelector<IStoreState>(store => store.burgerIngredients.ingredientsRequest);

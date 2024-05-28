@@ -1,11 +1,11 @@
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './login-page.module.css';
 import { AuthContext } from '../../services/auth';
 import { useForm } from '../../components/user-form';
 
-const LoginPage = () => {
+const LoginPage: FC = () => {
     const [ form, _, onChange ] = useForm({ email: '', password: '' });
     const { login } = useContext(AuthContext);
 

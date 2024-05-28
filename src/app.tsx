@@ -16,8 +16,9 @@ import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-de
 import Main from './components/main/main';
 import NotFoundPage from './pages/not-found-page/not-found-page';
 import { UnauthProtectedRoute } from './components/unauth-protected-route';
+import { FC } from 'react';
 
-const App = () => {
+const App: FC = () => {
    const location = useLocation();
 
    return (

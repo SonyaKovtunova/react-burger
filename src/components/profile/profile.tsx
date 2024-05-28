@@ -1,10 +1,10 @@
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useContext, useEffect } from "react";
+import { FC, useContext, useEffect } from "react";
 import styles from './profile.module.css';
 import { AuthContext } from "../../services/auth";
 import { useForm } from "../user-form";
 
-const Profile = () => {
+const Profile: FC = () => {
     const [ form, onSet, onChange ] = useForm({ name: '', email: '', password: '' });
     const { user, updateUser } = useContext(AuthContext);
     

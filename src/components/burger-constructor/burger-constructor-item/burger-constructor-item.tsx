@@ -5,20 +5,15 @@ import { useAppDispatch } from "../../../services";
 import { deleteIngredient } from "../../../services/burger-constructor";
 import { XYCoord, useDrag, useDrop } from "react-dnd";
 import { CATEGORIES } from "../../../utils/constants";
-import { useMemo, useRef } from "react";
+import { FC, RefObject, useMemo, useRef } from "react";
 
-interface IBurgerConstructorItemProps {
-    ingredient: IIngredientData,
-    index?: number,
-    moveIngredient: (dragIndex: number, hoverIndex: number) => void
+type TBurgerConstructorItemProps = {
+    ingredient: IIngredientData;
+    index?: number;
+    moveIngredient: (dragIndex: number, hoverIndex: number) => void;
 }
 
-interface DragItem {
-    index: number,
-    id: string,
-}
-
-const BurgerConstructorItem = ({ index = 0, ingredient, moveIngredient }: IBurgerConstructorItemProps) => {
+const BurgerConstructorItem: FC<TBurgerConstructorItemProps> = ({ index = 0, ingredient, moveIngredient }) => {
 
     const ref = useRef<HTMLDivElement>(null)
 
@@ -26,7 +21,7 @@ const BurgerConstructorItem = ({ index = 0, ingredient, moveIngredient }: IBurge
 
     const [, dropRef] = useDrop({
         accept: 'ingredientIndex',
-        hover(item: DragItem, monitor) {
+        hover(item: { index: number }, monitor) {
             if (!ref.current) {
                 return;
             }
@@ -69,7 +64,7 @@ const BurgerConstructorItem = ({ index = 0, ingredient, moveIngredient }: IBurge
     dragRef(dropRef(ref))
 
     const isNotBun = useMemo(() => ingredient.type !== CATEGORIES[0].type, [ingredient.type]);
-    const itemProps = useMemo(() => isNotBun ? { ref } : {}, [isNotBun]);
+    const itemProps = useMemo<{ ref?: RefObject<HTMLDivElement> | undefined }>(() => isNotBun ? { ref } : {}, [isNotBun]);
 
     return (
         <div className={burgerConstructorItemStyles.item} {...itemProps}>

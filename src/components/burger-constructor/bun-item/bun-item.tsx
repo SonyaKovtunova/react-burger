@@ -1,13 +1,14 @@
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
 import bunItemStyles from './bun-item.module.css';
 import { IIngredientData } from "../../../interfaces/ingredient-data-interface";
+import { FC } from "react";
 
-interface IBunItemItemProps {
-    ingredient: IIngredientData,
-    type?: 'top' | 'bottom',
+type TBunItemItemProps = {
+    ingredient: IIngredientData;
+    type?: 'top' | 'bottom';
 }
 
-const BunItem = ({ type = 'top', ingredient }: IBunItemItemProps) => {
+const BunItem: FC<TBunItemItemProps> = ({ type = 'top', ingredient }) => {
     return (
         <div className={bunItemStyles.item}>
             <div></div>

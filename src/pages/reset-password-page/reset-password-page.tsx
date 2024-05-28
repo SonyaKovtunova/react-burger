@@ -1,12 +1,12 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
 import { sendResetPasswordRequest } from "../../utils/burger-api";
 import { AuthContext } from "../../services/auth";
 import { useForm } from "../../components/user-form";
 
-const ResetPasswordPage = () => {
+const ResetPasswordPage: FC = () => {
     const [ form, _, onChange ] = useForm({ token: '', password: '' });
     const navigate = useNavigate();
     const { canResetPassword } = useContext(AuthContext);

@@ -1,11 +1,11 @@
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
 import { AuthContext } from "../../services/auth";
 import { useForm } from "../../components/user-form";
 
-const ForgotPasswordPage = () => {
+const ForgotPasswordPage: FC = () => {
     const [ form, _, onChange ] = useForm({ email: '' });
     const navigate = useNavigate();
     const { sendPasswordResetCode } = useContext(AuthContext);

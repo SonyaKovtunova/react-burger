@@ -1,9 +1,9 @@
 import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import styles from './profile-page.module.css';
-import { useContext } from "react";
+import { FC, useContext } from "react";
 import { AuthContext } from "../../services/auth";
 
-const ProfilePage = () => {
+const ProfilePage: FC = () => {
     const { logout, ...auth } = useContext(AuthContext);
 
     if (!auth.user) {

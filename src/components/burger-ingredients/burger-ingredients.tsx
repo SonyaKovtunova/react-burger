@@ -1,4 +1,4 @@
-import { SyntheticEvent, useCallback, useEffect } from "react";
+import { FC, SyntheticEvent, useCallback, useEffect } from "react";
 import IngredientCategory from "./ingredient-category/ingredient-category";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import burgerIngredientsStyles from './burger-ingredients.module.css';
@@ -8,7 +8,7 @@ import { getIngredientsThunk, setTab } from "../../services/burger-ingredients";
 import { IStoreState, getCategoriesState, useAppDispatch } from "../../services";
 import { CATEGORIES } from "../../utils/constants";
 
-const BurgerIngredients = () => {
+const BurgerIngredients: FC = () => {
     const categories = useSelector<IStoreState, ICategoryData[]>(getCategoriesState);
     const currentTab = useSelector<IStoreState, string>(store => store.burgerIngredients.currentTab);
 
@@ -34,7 +34,6 @@ const BurgerIngredients = () => {
         </div>);
     }, [currentTab]);
 
-    let listEl: HTMLDivElement;
     let categ: HTMLDivElement[] = [];
 
     const onScroll = (e: SyntheticEvent<HTMLDivElement>) => {
@@ -62,7 +61,7 @@ const BurgerIngredients = () => {
         <>
             <p className="text text_type_main-large mb-5">Соберите бургер</p>
             { getTabs() }
-            <div className={`${burgerIngredientsStyles.list} custom-scroll`} ref={(ref) => listEl = ref as HTMLDivElement } onScroll={onScroll}>
+            <div className={`${burgerIngredientsStyles.list} custom-scroll`} onScroll={onScroll}>
                 {
                     categories.map((category, index) => {
                         return <div key={index} ref={(ref) => categ[index] = ref as HTMLDivElement }><IngredientCategory category={category} key={index} /></div>;

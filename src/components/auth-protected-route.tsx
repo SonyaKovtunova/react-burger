@@ -1,8 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import { FC, ReactElement, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/auth';
 
-export const AuthProtectedRoute = (props : { children: ReactElement }) => {
+type TAuthProtectedRouteProps = {
+    children: ReactElement
+};
+
+export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children }) => {
     let { getUser, ...auth } = useContext(AuthContext);
     const [isUserLoaded, setUserLoaded] = useState(false);
 
@@ -19,5 +23,5 @@ export const AuthProtectedRoute = (props : { children: ReactElement }) => {
         return null;
     }
 
-    return auth.user ? props.children : <Navigate to="/login" replace/>;
+    return auth.user ? children : <Navigate to="/login" replace/>;
 }
