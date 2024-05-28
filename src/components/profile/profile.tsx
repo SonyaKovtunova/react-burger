@@ -1,5 +1,5 @@
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, useContext, useEffect } from "react";
+import { FC, FormEvent, useContext, useEffect } from "react";
 import styles from './profile.module.css';
 import { AuthContext } from "../../services/auth";
 import { useForm } from "../user-form";
@@ -20,14 +20,20 @@ const Profile: FC = () => {
         }
     }
 
-    const onSave = () => {
+    const onSave = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!form['email'] || !form['name'] || !form['password']) {
+            return;
+        }
+
         updateUser(form['email'], form['name'], form['password']);
     }
 
-    const isUserChanged = !user || user.name !== form['name'] || user.email !== form['email'] || !form['password'];
+    const isUserChanged = !user || user.name !== form['name'] || user.email !== form['email'] || !!form['password'];
 
     return (
-        <div className={styles.profile}>
+        <form className={styles.profile} onSubmit={onSave} onReset={onCancel}>
             <Input
                 type={'text'}
                 placeholder={'Имя'}
@@ -53,14 +59,14 @@ const Profile: FC = () => {
                 icon="EditIcon"
                 />
             { isUserChanged && <div className={styles.buttonsWrapper}>
-                <Button htmlType="button" type="secondary" size="medium" onClick={onCancel}>
+                <Button htmlType="reset" type="secondary" size="medium">
                     Отмена
                 </Button>
-                <Button htmlType="button" type="primary" size="medium" disabled={!form['email'] || !form['name'] || !form['password']} onClick={onSave}>
+                <Button htmlType="submit" type="primary" size="medium" disabled={!form['email'] || !form['name'] || !form['password']}>
                     Сохранить
                 </Button>
             </div>}
-        </div>
+        </form>
     );
 }
 
