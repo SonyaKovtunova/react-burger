@@ -1,13 +1,13 @@
-import { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import emptyItemStyles from './empty-item.module.css';
 
-interface IEmptyItemProps {
-    isBun?: boolean,
-    isTop?: boolean,
+type TEmptyItemProps = {
+    isBun?: boolean;
+    isTop?: boolean;
 }
 
-const EmptyItem = ( { isBun = false, isTop = true }: IEmptyItemProps) => {
-    const text = useMemo (() => isBun ? (isTop ? 'Верхняя булка' : 'Нижняя булка') : 'Ингредиенты', []);
+const EmptyItem: FC<TEmptyItemProps> = ( { isBun = false, isTop = true }) => {
+    const text = useMemo<string>(() => isBun ? (isTop ? 'Верхняя булка' : 'Нижняя булка') : 'Ингредиенты', []);
 
     return (
         <div className={emptyItemStyles.itemWrapper}>

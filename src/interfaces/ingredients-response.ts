@@ -1,5 +1,6 @@
-export interface IIngredientsResponse {
-    success: boolean,
+import { ICommonResponse } from "./common-response";
+
+export interface IIngredientsResponse extends ICommonResponse {
     data: IIngredientResponse[]
 }
 

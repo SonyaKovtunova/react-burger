@@ -1,10 +1,17 @@
-import { Navigate } from 'react-router-dom';
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { FC, ReactElement, useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../services/auth';
 
-export const AuthProtectedRoute = (props : { children: ReactElement }) => {
+type TAuthProtectedRouteProps = {
+    children: ReactElement;
+    anonymous?: boolean;
+};
+
+export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children, anonymous = false }) => {
     let { getUser, ...auth } = useContext(AuthContext);
     const [isUserLoaded, setUserLoaded] = useState(false);
+    const location = useLocation();
+    const from = location.state?.from || '/';
 
     const init = async () => {
         await getUser();
@@ -19,5 +26,13 @@ export const AuthProtectedRoute = (props : { children: ReactElement }) => {
         return null;
     }
 
-    return auth.user ? props.children : <Navigate to="/login" replace/>;
+    if (anonymous && !!auth.user) {
+        return <Navigate to={ from } />;
+    }
+
+    if (!anonymous && !auth.user) {
+        return <Navigate to="/login" state={{ from: location }}/>;
+    }
+
+    return children;
 }

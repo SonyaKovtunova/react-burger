@@ -3,7 +3,7 @@ import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import { IOrderRequest } from "../interfaces/order-request";
 import { IOrderResponse } from "../interfaces/order-response";
 import { IAuthResponse } from "../interfaces/auth-response";
-import { IErrorResponse } from "../interfaces/error-response";
+import { ICommonResponse } from "../interfaces/common-response";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
 
@@ -131,10 +131,8 @@ const sendRequestWithRefreshToken = (url: string, accessToken: string, refreshTo
 
     return sendRequest(url, options)
         .then(data => ({ ...data, accessToken : `Bearer ${accessToken}`, refreshToken: refreshToken }))
-        .catch(err => {
-            const errorResponse = err as IErrorResponse;
-
-            if (errorResponse.message === 'jwt expired') {
+        .catch((err: ICommonResponse) => {
+            if (err.message === 'jwt expired') {
                 return sendRefreshTokenRequest(refreshToken)
                     .then(refreshTokenData => {
                         if (refreshTokenData.success) {

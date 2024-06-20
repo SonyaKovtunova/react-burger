@@ -2,12 +2,11 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IIngredientData } from '../../interfaces/ingredient-data-interface';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
-import { useSelector } from 'react-redux';
 import { addIngredient, clearOrderNumber, createOrderThunk, sortIngredients,updateBun } from '../../services/burger-constructor';
-import { IStoreState, useAppDispatch } from '../../services';
+import { useAppDispatch, useAppSelector } from '../../services';
 import { IOrderRequest } from '../../interfaces/order-request';
 import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
@@ -16,19 +15,19 @@ import BunItem from './bun-item/bun-item';
 import { AuthContext } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
 
-const BurgerConstructor = () => {
+const BurgerConstructor: FC = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
-    const ingredients = useSelector<IStoreState, IIngredientData[]>(store => store.burgerConstructor.ingredients);
-    const orderNumberIsCreated = useSelector<IStoreState, boolean>(store => !!store.burgerConstructor.orderNumber 
+    const ingredients = useAppSelector(store => store.burgerConstructor.ingredients);
+    const orderNumberIsCreated = useAppSelector(store => !!store.burgerConstructor.orderNumber 
         && !store.burgerConstructor.orderNumberRequest 
         && !store.burgerConstructor.orderNumberFailed);
-    const bun = useSelector<IStoreState, IIngredientData | null>(store => store.burgerConstructor.bun);
+    const bun = useAppSelector(store => store.burgerConstructor.bun);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const {user, ...auth }= useContext(AuthContext);
+    const { user }= useContext(AuthContext);
 
     useEffect(() => {
         if (orderNumberIsCreated) {

@@ -1,7 +1,8 @@
-export interface IOrderResponse {
+import { ICommonResponse } from "./common-response";
+
+export interface IOrderResponse extends ICommonResponse {
     name: string,
     order: {
         number: string,
     },
-    success: boolean,
 }
