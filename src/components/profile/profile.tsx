@@ -1,16 +1,18 @@
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, FormEvent, useContext, useEffect } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import styles from './profile.module.css';
-import { AuthContext } from "../../services/auth";
 import { useForm } from "../user-form";
+import { useAppDispatch, useAppSelector } from "../../services";
+import { updateUserThunk } from "../../services/user";
 
 const Profile: FC = () => {
     const [ form, onSet, onChange ] = useForm({ name: '', email: '', password: '' });
-    const { user, updateUser } = useContext(AuthContext);
-    
+    const user = useAppSelector(store => store.user.user);
+    const dispatch = useAppDispatch();
+
     useEffect(() => {
         if (user) {
-            onSet({ name: user.name, email: user.email});
+            onSet({ name: user.name, email: user.email, password: '' });
         }
     }, [user]);
 
@@ -27,7 +29,7 @@ const Profile: FC = () => {
             return;
         }
 
-        updateUser(form['email'], form['name'], form['password']);
+        dispatch(updateUserThunk({email: form['email'], name: form['name'], password: form['password']}));
     }
 
     const isUserChanged = !user || user.name !== form['name'] || user.email !== form['email'] || !!form['password'];

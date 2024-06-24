@@ -1,15 +1,15 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, FormEvent, useContext } from "react";
+import { FC, FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
 import { sendResetPasswordRequest } from "../../utils/burger-api";
-import { AuthContext } from "../../services/auth";
 import { useForm } from "../../components/user-form";
+import { useAppSelector } from "../../services";
 
 const ResetPasswordPage: FC = () => {
     const [ form, _, onChange ] = useForm({ token: '', password: '' });
     const navigate = useNavigate();
-    const { canResetPassword } = useContext(AuthContext);
+    const canResetPassword = useAppSelector(store => store.user.canResetPassword);
 
     if (!canResetPassword) {
         return (<Navigate to={'/forgot-password'} replace />);
@@ -23,7 +23,7 @@ const ResetPasswordPage: FC = () => {
         }
 
         await sendResetPasswordRequest(form['password'], form['token']);  
-        navigate('login', { replace: true });
+        navigate('/login', { replace: true });
     }
 
     return (

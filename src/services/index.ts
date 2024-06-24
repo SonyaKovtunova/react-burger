@@ -5,18 +5,21 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { ICategoryData } from "../interfaces/category-data-interface";
 import feedReducer, { IFeedState } from "./feed";
 import feedMiddleware from "./feed-middleware";
+import userReducer, { IUserState } from "./user";
 
 export interface IStoreState {
     burgerIngredients: IBurgerIngredientsState,
     burgerConstructor: IBurgerConstructorState,
-    feed: IFeedState
+    feed: IFeedState,
+    user: IUserState
 }
 
 export const store = configureStore({
     reducer: {
         burgerIngredients: burgerIngredientsReducer,
         burgerConstructor: burgerConstructorReducer,
-        feed: feedReducer
+        feed: feedReducer,
+        user: userReducer,
     },
     middleware: getDefaultMiddleware => {
         return getDefaultMiddleware().concat([feedMiddleware]);

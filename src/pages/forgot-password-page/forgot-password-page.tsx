@@ -1,14 +1,22 @@
 import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-components";
-import { FC, FormEvent, useContext } from "react";
+import { FC, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
-import { AuthContext } from "../../services/auth";
 import { useForm } from "../../components/user-form";
+import { useAppDispatch, useAppSelector } from "../../services";
+import { sendPasswordResetCodeThunk } from "../../services/user";
 
 const ForgotPasswordPage: FC = () => {
     const [ form, _, onChange ] = useForm({ email: '' });
     const navigate = useNavigate();
-    const { sendPasswordResetCode } = useContext(AuthContext);
+    const dispatch = useAppDispatch();
+    const canResetPassword = useAppSelector(store => store.user.canResetPassword);
+
+    useEffect(() => {
+        if (canResetPassword) {
+            navigate('/reset-password', { replace: true });
+        }
+    }, [canResetPassword]);
 
     const onSendPasswordResetCode = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -17,8 +25,7 @@ const ForgotPasswordPage: FC = () => {
             return;
         }
 
-        await sendPasswordResetCode(form['email']);
-        navigate('/reset-password', { replace: true });
+        dispatch(sendPasswordResetCodeThunk({ email: form['email'] }));
     }
 
     return (

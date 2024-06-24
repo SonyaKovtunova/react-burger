@@ -2,7 +2,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IIngredientData } from '../../interfaces/ingredient-data-interface';
-import { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { addIngredient, clearOrderNumber, createOrderThunk, sortIngredients,updateBun } from '../../services/burger-constructor';
@@ -19,6 +19,7 @@ import { getInredientsSum } from '../../utils/utils';
 const BurgerConstructor: FC = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
+    const user = useAppSelector(store => store.user.user);
     const ingredients = useAppSelector(store => store.burgerConstructor.ingredients);
     const orderNumberIsCreated = useAppSelector(store => !!store.burgerConstructor.orderNumber 
         && !store.burgerConstructor.orderNumberRequest 
@@ -27,8 +28,6 @@ const BurgerConstructor: FC = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
-    const { user }= useContext(AuthContext);
 
     useEffect(() => {
         if (orderNumberIsCreated) {

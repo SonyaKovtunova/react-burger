@@ -22,17 +22,18 @@ import { feedActions } from './services/feed';
 import Feed from './components/feed/feed';
 import OrderDetailModal from './components/order-detail-modal/order-detail-modal';
 import OrderPage from './pages/order-page/order-page';
+import { getUserThunk } from './services/user';
 
 const App: FC = () => {
    const location = useLocation();
-
    const dispatch = useAppDispatch();
 
    useEffect(() => {
+      dispatch(getUserThunk());
       dispatch(getIngredientsThunk());
       dispatch(feedActions.startConnecting());
    }, [dispatch]);
-    
+
    return (
       <>
          <AuthProvider>
