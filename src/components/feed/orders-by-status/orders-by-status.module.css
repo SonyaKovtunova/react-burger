@@ -1,0 +1,11 @@
+.columns {
+    display: flex;
+}
+
+.column {
+    min-width: 70px;
+}
+
+.doneOrder {
+    color: var(--colors-interface-success);
+}

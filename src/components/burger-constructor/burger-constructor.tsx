@@ -14,6 +14,7 @@ import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
 import BunItem from './bun-item/bun-item';
 import { AuthContext } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
+import { getInredientsSum } from '../../utils/utils';
 
 const BurgerConstructor: FC = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
@@ -70,9 +71,7 @@ const BurgerConstructor: FC = () => {
         dispatch(clearOrderNumber());
     }, []);
 
-    const sum = useMemo(() => 
-        (bun?.price ?? 0) * 2 + ingredients.reduce((result, item) => result + item.price, 0) ?? 0,
-    [bun, ingredients]);
+    const sum = useMemo(() => getInredientsSum(bun ? ingredients.concat([bun, bun]) : ingredients), [bun, ingredients]);
 
     const moveIngredient = useCallback((dragIndex: number, hoverIndex: number) => {
         dispatch(sortIngredients({ dragIndex, hoverIndex }));

@@ -1,0 +1,35 @@
+.main {
+    display: grid;
+    grid-template-columns: calc(100% - 660px) 620px;
+    padding: 40px 340px;
+    gap: 40px;
+
+    @media screen and (max-width : 1870px) {
+        padding: 40px 140px;
+    }
+
+    @media screen and (max-width : 1470px) {
+        padding: 40px;
+    }
+
+    @media screen and (max-width : 1270px) {
+        grid-template-columns: 100%;
+    }
+    
+    @media screen and (max-width : 800px) {
+        padding: 12px;
+    }
+}
+
+.loaderWrapper {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    opacity: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}

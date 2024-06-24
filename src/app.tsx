@@ -18,6 +18,10 @@ import NotFoundPage from './pages/not-found-page/not-found-page';
 import { FC, useEffect } from 'react';
 import { useAppDispatch } from './services';
 import { getIngredientsThunk } from './services/burger-ingredients';
+import { feedActions } from './services/feed';
+import Feed from './components/feed/feed';
+import OrderDetailModal from './components/order-detail-modal/order-detail-modal';
+import OrderPage from './pages/order-page/order-page';
 
 const App: FC = () => {
    const location = useLocation();
@@ -26,6 +30,7 @@ const App: FC = () => {
 
    useEffect(() => {
       dispatch(getIngredientsThunk());
+      dispatch(feedActions.startConnecting());
    }, [dispatch]);
     
    return (
@@ -45,7 +50,11 @@ const App: FC = () => {
                   <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
                      <Route index element={<Profile />} />
                      <Route path="orders" element={<Orders />} />
-                     <Route path="orders/:orderNumber" element={<Order />} />
+                     <Route path="orders/:id" element={<Order />} />
+                  </Route>
+                  <Route path="/feed" element={<MainPage />}>
+                     <Route index element={<Feed />} />
+                     <Route path=":id" element={<OrderPage />} />
                   </Route>
                   <Route path='*' element={<NotFoundPage />} />
                </Routes>
@@ -53,6 +62,8 @@ const App: FC = () => {
                   location.state?.background 
                      && <Routes>
                            <Route path="/ingredients/:id" element={<IngredientDetailsModal />}/>
+                           <Route path="/feed/:id" element={<OrderDetailModal />}/>
+                           <Route path="/profile/orders/:id" element={<OrderDetailModal />}/>
                         </Routes> 
                }
             </>
