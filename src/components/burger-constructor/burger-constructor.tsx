@@ -12,7 +12,6 @@ import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
 import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
 import BunItem from './bun-item/bun-item';
-import { AuthContext } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { getInredientsSum } from '../../utils/utils';
 

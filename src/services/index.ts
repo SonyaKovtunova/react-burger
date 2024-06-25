@@ -51,7 +51,9 @@ export const getCategoriesState = createSelector(
 
 export const createIsLoadingSelector = createSelector(
     (state: IStoreState) => (state),
-    (state: IStoreState) => state.burgerIngredients.ingredientsRequest || state.burgerConstructor.orderNumberRequest
+    (state: IStoreState) => state.burgerIngredients.ingredientsRequest 
+        || state.burgerConstructor.orderNumberRequest
+        || state.user.userRequest
 );
 
 export const createOrderNumbersSelector = (status: string) => createSelector(

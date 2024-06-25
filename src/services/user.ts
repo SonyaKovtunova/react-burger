@@ -1,13 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../interfaces/user";
-import { sendGetUserRequest, sendLoginRequest, sendLogoutRequest, sendPasswordResetCodeRequest, sendRegisterRequest, sendResetPasswordRequest, sendUpdateUserRequest } from "../utils/burger-api";
-import { IAuthResponse } from "../interfaces/auth-response";
+import { sendGetUser, sendLogin, sendLogout, sendPasswordResetCode, sendRegister, sendResetPassword, sendUpdateUser } from "../utils/burger-api";
 import { deleteCookie, getCookie, setCookie } from "../utils/cookies";
-
-const setTokens = (data: IAuthResponse) => {
-    updateRefreshToken(data.refreshToken);
-    updateAccessToken(data.accessToken);
-}
+import { IStoreState } from ".";
 
 const updateRefreshToken = (refreshToken: string) => {
     if (refreshToken) {
@@ -17,63 +12,60 @@ const updateRefreshToken = (refreshToken: string) => {
     }
 }
   
-const updateAccessToken = (accessToken: string) => {
-    if (accessToken && accessToken.indexOf('Bearer') === 0) {
-        const authToken = accessToken.split('Bearer ')[1];
-        localStorage.setItem('token', authToken);
-    } else {
-        localStorage.removeItem('token');
-    }
-}
-  
 export const getUserThunk = createAsyncThunk<IUser | null>(
     "user/get",
-    async () => {
+    async (_, { getState, dispatch }) => {
         const refreshToken = getCookie('token');
-        const accessToken = localStorage.getItem('token');
-        if (!refreshToken || !accessToken) {
+        const { token } = (getState() as IStoreState).user;
+
+        if (!refreshToken) {
             return null;
         }
     
-        const data = await sendGetUserRequest(accessToken, refreshToken);
+        const data = await sendGetUser(token, refreshToken);
 
-        setTokens(data);
+        updateRefreshToken(data.refreshToken);
+        dispatch(userSlice.actions.setToken(data.accessToken));
         return data.user;
     }
 );
 
 export const updateUserThunk = createAsyncThunk<IUser | null, { email: string, name: string, password: string }>(
     "user/update",
-    async ({ email, name, password }) => {
+    async ({ email, name, password }, { getState, dispatch }) => {
         const refreshToken = getCookie('token');
-        const accessToken = localStorage.getItem('token');
-        if (!refreshToken || !accessToken) {
+        const { token } = (getState() as IStoreState).user;
+
+        if (!refreshToken) {
             return null;
         }
 
-        const data = await sendUpdateUserRequest(email, name, password, accessToken, refreshToken);
+        const data = await sendUpdateUser(email, name, password, token, refreshToken);
 
-        setTokens(data);
+        updateRefreshToken(data.refreshToken);
+        dispatch(userSlice.actions.setToken(data.accessToken));
         return data.user;
     }
 );
 
 export const loginThunk = createAsyncThunk<IUser | null, { email: string, password: string }>(
     "user/login",
-    async ({ email, password }) => {
-        const data = await sendLoginRequest(email, password);
+    async ({ email, password }, { dispatch }) => {
+        const data = await sendLogin(email, password);
             
-        setTokens(data);
+        updateRefreshToken(data.refreshToken);
+        dispatch(userSlice.actions.setToken(data.accessToken));
         return data.user;
     }
 );
   
 export const registerThunk = createAsyncThunk<IUser | null, { email: string, name: string, password: string }>(
     "user/register",
-    async ({ email, name, password }) => {
-        const data = await sendRegisterRequest(email, name, password);
+    async ({ email, name, password }, { dispatch }) => {
+        const data = await sendRegister(email, name, password);
 
-        setTokens(data);
+        updateRefreshToken(data.refreshToken);
+        dispatch(userSlice.actions.setToken(data.accessToken));
         return data.user;
     }
 );
@@ -81,7 +73,7 @@ export const registerThunk = createAsyncThunk<IUser | null, { email: string, nam
 export const sendPasswordResetCodeThunk = createAsyncThunk<void, { email: string }>(
     "user/sendPasswordResetCode",
     async ({ email }) => {
-        var data = await sendPasswordResetCodeRequest(email);
+        var data = await sendPasswordResetCode(email);
 
         if (data.success) {
             localStorage.setItem('waitForResetPassword', '1');
@@ -92,15 +84,15 @@ export const sendPasswordResetCodeThunk = createAsyncThunk<void, { email: string
 export const resetPasswordThunk = createAsyncThunk<void, { password: string, token: string }>(
     "user/sendResetPasswordRequest",
     async ({ password, token }) => {
-        await sendResetPasswordRequest(password, token);
+        await sendResetPassword(password, token);
         localStorage.removeItem('waitForResetPassword');
     }
 );
   
 export const logoutThunk = createAsyncThunk(
     "user/logout",
-    async () => {
-        localStorage.removeItem('token');
+    async (_, { dispatch }) => {
+        dispatch(userSlice.actions.setToken(null));
 
         const token = getCookie('token');
         if (!token) {
@@ -108,17 +100,21 @@ export const logoutThunk = createAsyncThunk(
         }
 
         deleteCookie('token');
-        await sendLogoutRequest(token);
+        await sendLogout(token);
     }
 );
 
 export interface IUserState {
     user: IUser | null,
+    userRequest: boolean,
+    token: string | null,
     canResetPassword: boolean,
 }
 
 const initialState: IUserState = {
     user: null,
+    userRequest: false,
+    token: null,
     canResetPassword: !!localStorage.getItem('waitForResetPassword')
 }
   
@@ -126,16 +122,28 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        setToken: (state, action: { type: string, payload: string | null }) => {
+            let accessToken = action.payload;
+            if (accessToken && accessToken.indexOf('Bearer') === 0) {
+                accessToken = accessToken.split('Bearer ')[1];
+                state.token = accessToken;
+            } else {
+                state.token = null;
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getUserThunk.pending, (state) => {
+                state.userRequest = true;
                 state.canResetPassword = false;
             })
             .addCase(getUserThunk.fulfilled, (state, action) => {
+                state.userRequest = false;
                 state.user = action.payload;
             })
             .addCase(getUserThunk.rejected, (state) => {
+                state.userRequest = false;
                 state.user = null;
             })
             .addCase(updateUserThunk.pending, (state) => {
@@ -148,6 +156,7 @@ export const userSlice = createSlice({
                 state.user = null;
             })
             .addCase(loginThunk.pending, (state) => {
+                state.token = null;
                 state.user = null;
                 state.canResetPassword = false;
             })
@@ -158,6 +167,7 @@ export const userSlice = createSlice({
                 state.user = null;
             })
             .addCase(registerThunk.pending, (state) => {
+                state.token = null;
                 state.user = null;
                 state.canResetPassword = false;
             })
