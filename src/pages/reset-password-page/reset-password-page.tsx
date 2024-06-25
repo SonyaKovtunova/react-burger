@@ -2,7 +2,7 @@ import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burg
 import { FC, FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
-import { sendResetPasswordRequest } from "../../utils/burger-api";
+import { sendResetPassword } from "../../utils/burger-api";
 import { useForm } from "../../components/user-form";
 import { useAppSelector } from "../../services";
 
@@ -22,7 +22,7 @@ const ResetPasswordPage: FC = () => {
             return;
         }
 
-        await sendResetPasswordRequest(form['password'], form['token']);  
+        await sendResetPassword(form['password'], form['token']);  
         navigate('/login', { replace: true });
     }
 
