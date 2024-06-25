@@ -1,9 +1,13 @@
 import { FC } from "react";
 import OrderDetail from "../../components/order-detail/order-detail";
 
-const OrderPage: FC = () => {
+type TOrderDetailProps = {
+    withToken: boolean;
+}
+
+const OrderPage: FC<TOrderDetailProps> = ({ withToken = false }) => {
     return (
-        <OrderDetail />
+        <OrderDetail withToken={withToken} />
     );
 }
  

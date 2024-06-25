@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IFeed } from "../interfaces/feed";
 
-export interface IFeedState {
+export interface IOrdersState {
     isConnected: boolean; 
     error?: Event;
-    feed: IFeed | null;
+    orders: IFeed | null;
 }
 
-const initialState: IFeedState = {
+const initialState: IOrdersState = {
     isConnected: false,
-    feed: null,
+    orders: null,
 }
   
-export const feedSlice = createSlice({
-    name: 'feed',
+export const ordersSlice = createSlice({
+    name: 'orders',
     initialState,
     reducers: { 
         startConnecting: state => {
@@ -32,11 +32,11 @@ export const feedSlice = createSlice({
             state.isConnected = false;
             state.error = undefined;
         },
-        setFeed: (state, action: { type: string, payload: IFeed }) => {
-            state.feed = action.payload;
+        setOrders: (state, action: { type: string, payload: IFeed }) => {
+            state.orders = action.payload;
         },
     },
 });
 
-export const feedActions = feedSlice.actions;
-export default feedSlice.reducer;
+export const ordersActions = ordersSlice.actions;
+export default ordersSlice.reducer;

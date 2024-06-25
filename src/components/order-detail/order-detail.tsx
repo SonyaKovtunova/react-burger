@@ -3,58 +3,65 @@ import { useAppDispatch, useAppSelector } from "../../services";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { IIngredientData } from "../../interfaces/ingredient-data-interface";
 import styles from './order-detail.module.css';
-import { getOrderThunk } from "../../services/feed";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getInredientsSum } from "../../utils/utils";
+import { getOrderThunk } from "../../services/order";
 
-const OrderDetail: FC = () => {
-    const selectedOrder = useAppSelector(store => store.feed.selectedOrder);
+type TOrderDetailProps = {
+    withToken: boolean;
+}
+
+const OrderDetail: FC<TOrderDetailProps> = ({ withToken = false }) => {
+    const order = useAppSelector(store => store.order.order);
     const ingredients = useAppSelector(store => store.burgerIngredients.ingredients);
 
     const dispatch = useAppDispatch();
 
     const params = useParams();
-    const selectedOrderFailed = useAppSelector(store => store.feed.selectedOrderFailed);
+    const orderFailed = useAppSelector(store => store.order.orderFailed);
     
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        if (!selectedOrder && params['id']) {
-            dispatch(getOrderThunk(params['id']));
+        if (!order && params['id']) {
+            dispatch(getOrderThunk({ id: params['id'], withToken : withToken }));
         }
-    }, [selectedOrder, params, dispatch]);
+    }, [order, params, dispatch]);
 
     useEffect(() => {
-        if (selectedOrderFailed) {
+        if (orderFailed) {
             if (location.state?.background) {
                 navigate('/', { state: { } });
             } else {
                 navigate(-1);
             }
         }
-    }, [selectedOrderFailed,location.state?.background, navigate]);
+    }, [orderFailed, location.state?.background, navigate]);
 
     const orderIngredients = useMemo(() => 
-        selectedOrder?.ingredients
+        order?.ingredients
             .map(ingredientId => ingredients.find(ingredient => ingredient._id === ingredientId))
             .filter(ingredient => !!ingredient)
             .map(ingredient => ingredient as IIngredientData), 
-        [selectedOrder, ingredients]);
+        [order, ingredients]);
 
     const sum = useMemo(() => getInredientsSum(orderIngredients), [orderIngredients]);
 
     return (
         <div className={styles.order}>
-            <p className="text text_type_digits-default mb-10">#{selectedOrder?.number}</p>
+            <p className="text text_type_digits-default mb-10">#{order?.number}</p>
             <div className={`mb-15 ${styles.nameAndStatus}`}>
-                <p className="text text_type_main-medium mb-2">{selectedOrder?.name}</p>
-                <p className={`text text_type_main-default ${selectedOrder?.status === 'done' ? styles.done : ''}`}>
-                    {selectedOrder?.status === 'done'
-                        ? 'Выполнен'
-                        : selectedOrder?.status === 'pending'
-                            ? 'В работе'
-                            : selectedOrder?.status
+                <p className="text text_type_main-medium mb-2">{order?.name}</p>
+                <p className={`text text_type_main-default ${order?.status === 'done' ? styles.done : ''}`}>
+                    {
+                        order?.status === 'done'
+                            ? 'Выполнен'
+                            : order?.status === 'pending'
+                                ? 'В работе'
+                                : order?.status === 'created'
+                                    ? 'Создан'
+                                    : order?.status
                     }
                 </p>
             </div>
@@ -77,7 +84,7 @@ const OrderDetail: FC = () => {
                 </div>
                 </div> 
             <div className={styles.timeAndPrice}>
-                <p className="text text_type_main-default text_color_inactive">{selectedOrder ? new Date(selectedOrder.createdAt).toLocaleString('ru-RU', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null}</p>
+                <p className="text text_type_main-default text_color_inactive">{order ? new Date(order.createdAt).toLocaleString('ru-RU', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : null}</p>
                 <p className="text text_type_digits-default">{sum} <CurrencyIcon type="primary" /></p>
             </div>
         </div>

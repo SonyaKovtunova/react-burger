@@ -6,12 +6,17 @@ import { ICategoryData } from "../interfaces/category-data-interface";
 import feedReducer, { IFeedState } from "./feed";
 import feedMiddleware from "./feed-middleware";
 import userReducer, { IUserState } from "./user";
+import ordersReducer, { IOrdersState } from "./orders";
+import ordersMiddleware from "./orders-middleware";
+import orderReducer, { IOrderState } from "./order";
 
 export interface IStoreState {
     burgerIngredients: IBurgerIngredientsState,
     burgerConstructor: IBurgerConstructorState,
     feed: IFeedState,
-    user: IUserState
+    user: IUserState,
+    orders: IOrdersState,
+    order: IOrderState
 }
 
 export const store = configureStore({
@@ -20,9 +25,11 @@ export const store = configureStore({
         burgerConstructor: burgerConstructorReducer,
         feed: feedReducer,
         user: userReducer,
+        orders: ordersReducer,
+        order: orderReducer,
     },
     middleware: getDefaultMiddleware => {
-        return getDefaultMiddleware().concat([feedMiddleware]);
+        return getDefaultMiddleware().concat([feedMiddleware, ordersMiddleware]);
     }
 });
 

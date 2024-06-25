@@ -5,7 +5,7 @@ import Order from "./order/order";
 import styles from './feed.module.css';
 import OrdersByStatus from "./orders-by-status/orders-by-status";
 import { IOrder } from "../../interfaces/feed";
-import { feedActions } from "../../services/feed";
+import { setOrder } from "../../services/order";
 
 const Feed: FC = () => {
     const location = useLocation();
@@ -14,7 +14,7 @@ const Feed: FC = () => {
     const dispatch = useAppDispatch();
     
     const selectOrder = (order: IOrder) => {
-        dispatch(feedActions.setOrder(order));
+        dispatch(setOrder(order));
     }
 
     return (

@@ -110,7 +110,7 @@ export const getIngredients = () => {
         });
 }
 
-export const createOrder = (data: IOrderRequest) => {
+export const createOrder = (data: IOrderRequest, accessToken: string | null, refreshToken: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -120,7 +120,7 @@ export const createOrder = (data: IOrderRequest) => {
         body: JSON.stringify(data),
     };
 
-    return sendRequest(`${URL}/orders`, request)
+    return sendRequestWithRefreshToken(`${URL}/orders`, accessToken, refreshToken, request)
         .then((response) => {
             const data = response as IOrderResponse;
             return data.order?.number;
@@ -129,6 +129,14 @@ export const createOrder = (data: IOrderRequest) => {
 
 export const getOrder = (id: string) => {
     return sendRequest(`${URL}/orders/${id}`)
+        .then((response) => {
+            const data = response as IFeed;
+            return data;
+        });
+}
+
+export const getOrderWithToken = (id: string, accessToken: string | null, refreshToken: string) => {
+    return sendRequestWithRefreshToken(`${URL}/orders/${id}`, accessToken, refreshToken)
         .then((response) => {
             const data = response as IFeed;
             return data;

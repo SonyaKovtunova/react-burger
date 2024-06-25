@@ -8,30 +8,39 @@ import AppHeader from './components/app-header/app-header';
 import ProfilePage from './pages/profile-page/profile-page';
 import Profile from './components/profile/profile';
 import Orders from './components/orders/orders';
-import Order from './components/order/order';
 import { AuthProtectedRoute } from './components/auth-protected-route';
 import IngredientDetailsModal from './components/burger-ingredients/ingerdient-details-modal/ingredient-details-modal';
 import IngredientDetailsPage from './pages/ingredient-details-page/ingredient-details-page';
 import Main from './components/main/main';
 import NotFoundPage from './pages/not-found-page/not-found-page';
 import { FC, useEffect } from 'react';
-import { useAppDispatch } from './services';
+import { useAppDispatch, useAppSelector } from './services';
 import { getIngredientsThunk } from './services/burger-ingredients';
 import { feedActions } from './services/feed';
 import Feed from './components/feed/feed';
 import OrderDetailModal from './components/order-detail-modal/order-detail-modal';
 import OrderPage from './pages/order-page/order-page';
 import { getUserThunk } from './services/user';
+import { ordersActions } from './services/orders';
 
 const App: FC = () => {
    const location = useLocation();
    const dispatch = useAppDispatch();
+   const user = useAppSelector(store => store.user.user);
 
    useEffect(() => {
       dispatch(getUserThunk());
       dispatch(getIngredientsThunk());
       dispatch(feedActions.startConnecting());
    }, [dispatch]);
+
+   useEffect(() => {
+      if (user) {
+         dispatch(ordersActions.startConnecting());
+      } else {
+         dispatch(ordersActions.close());
+      }
+   }, [user]);
 
    return (
       <>
@@ -48,11 +57,11 @@ const App: FC = () => {
             <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
                <Route index element={<Profile />} />
                <Route path="orders" element={<Orders />} />
-               <Route path="orders/:id" element={<Order />} />
+               <Route path="orders/:id" element={<OrderPage withToken={true} />} />
             </Route>
             <Route path="/feed" element={<MainPage />}>
                <Route index element={<Feed />} />
-               <Route path=":id" element={<OrderPage />} />
+               <Route path=":id" element={<OrderPage withToken={false} />} />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
          </Routes>
@@ -60,8 +69,8 @@ const App: FC = () => {
             location.state?.background 
                && <Routes>
                   <Route path="/ingredients/:id" element={<IngredientDetailsModal />}/>
-                  <Route path="/feed/:id" element={<OrderDetailModal />}/>
-                  <Route path="/profile/orders/:id" element={<OrderDetailModal />}/>
+                  <Route path="/feed/:id" element={<OrderDetailModal withToken={false} />}/>
+                  <Route path="/profile/orders/:id" element={<OrderDetailModal withToken={true} />}/>
                </Routes> 
          }
       </>
