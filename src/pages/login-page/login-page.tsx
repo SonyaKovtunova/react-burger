@@ -2,7 +2,7 @@ import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer
 import { FC, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './login-page.module.css';
-import { useForm } from '../../components/user-form';
+import { useForm } from "../../hooks/user-form";
 import { useAppDispatch } from '../../services';
 import { loginThunk } from '../../services/user';
 

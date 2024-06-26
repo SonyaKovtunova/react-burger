@@ -2,7 +2,7 @@ import { Button, EmailInput } from "@ya.praktikum/react-developer-burger-ui-comp
 import { FC, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './forgot-password-page.module.css';
-import { useForm } from "../../components/user-form";
+import { useForm } from "../../hooks/user-form";
 import { useAppDispatch, useAppSelector } from "../../services";
 import { sendPasswordResetCodeThunk } from "../../services/user";
 

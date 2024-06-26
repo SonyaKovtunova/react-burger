@@ -3,7 +3,7 @@ import { FC, FormEvent } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import styles from './reset-password-page.module.css';
 import { sendResetPassword } from "../../utils/burger-api";
-import { useForm } from "../../components/user-form";
+import { useForm } from "../../hooks/user-form";
 import { useAppSelector } from "../../services";
 
 const ResetPasswordPage: FC = () => {

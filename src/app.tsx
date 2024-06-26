@@ -37,21 +37,21 @@ const App: FC = () => {
             <Route path="/" element={<MainPage />}>
                <Route index element={<Main />} />
                <Route path="/ingredients/:id" element={<IngredientDetailsPage />}/>
+               <Route path="/login" element={<AuthProtectedRoute children={<LoginPage />} anonymous />} />
+               <Route path="/register" element={<AuthProtectedRoute children={<RegisterPage />} anonymous />} />
+               <Route path="/forgot-password" element={<AuthProtectedRoute children={<ForgotPasswordPage />} anonymous />} />
+               <Route path="/reset-password" element={<AuthProtectedRoute children={<ResetPasswordPage />} anonymous />} />
+               <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
+                  <Route index element={<Profile />} />
+                  <Route path="orders" element={<Orders />} />
+               </Route>
+               <Route path="/profile/orders/:id" element={<OrderPage />} />
+               <Route path="/feed">
+                  <Route index element={<Feed />} />
+                  <Route path=":id" element={<OrderPage />} />
+               </Route>
+               <Route path='*' element={<NotFoundPage />} />
             </Route>
-            <Route path="/login" element={<AuthProtectedRoute children={<LoginPage />} anonymous />} />
-            <Route path="/register" element={<AuthProtectedRoute children={<RegisterPage />} anonymous />} />
-            <Route path="/forgot-password" element={<AuthProtectedRoute children={<ForgotPasswordPage />} anonymous />} />
-            <Route path="/reset-password" element={<AuthProtectedRoute children={<ResetPasswordPage />} anonymous />} />
-            <Route path="/profile" element={<AuthProtectedRoute children={<ProfilePage/>}/>}>
-               <Route index element={<Profile />} />
-               <Route path="orders" element={<Orders />} />
-               <Route path="orders/:id" element={<OrderPage />} />
-            </Route>
-            <Route path="/feed" element={<MainPage />}>
-               <Route index element={<Feed />} />
-               <Route path=":id" element={<OrderPage />} />
-            </Route>
-            <Route path='*' element={<NotFoundPage />} />
          </Routes>
          { 
             location.state?.background 

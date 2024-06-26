@@ -114,7 +114,7 @@ export interface IUserState {
 const initialState: IUserState = {
     user: null,
     userRequest: false,
-    token: null,
+    token: localStorage.getItem('token'),
     canResetPassword: !!localStorage.getItem('waitForResetPassword')
 }
   
@@ -127,8 +127,10 @@ export const userSlice = createSlice({
             if (accessToken && accessToken.indexOf('Bearer') === 0) {
                 accessToken = accessToken.split('Bearer ')[1];
                 state.token = accessToken;
+                localStorage.setItem('token', accessToken);
             } else {
                 state.token = null;
+                localStorage.removeItem('token');
             }
         }
     },

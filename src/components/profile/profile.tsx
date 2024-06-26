@@ -1,7 +1,7 @@
 import { Button, EmailInput, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { FC, FormEvent, useEffect } from "react";
 import styles from './profile.module.css';
-import { useForm } from "../user-form";
+import { useForm } from "../../hooks/user-form";
 import { useAppDispatch, useAppSelector } from "../../services";
 import { updateUserThunk } from "../../services/user";
 
