@@ -1,19 +1,41 @@
 import { configureStore, createSelector } from "@reduxjs/toolkit";
 import burgerIngredientsReducer, { IBurgerIngredientsState } from "./burger-ingredients";
-import burgerConstructor, { IBurgerConstructorState } from "./burger-constructor";
+import burgerConstructorReducer, { IBurgerConstructorState } from "./burger-constructor";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { ICategoryData } from "../interfaces/category-data-interface";
+import userReducer, { IUserState } from "./user";
+import orderReducer, { IOrderState } from "./order";
+import socketMiddleware from "./socket-middleware";
+import socketReducer, { ISocketState, TSocketActions, socketActions } from "./socket";
 
 export interface IStoreState {
     burgerIngredients: IBurgerIngredientsState,
-    burgerConstructor: IBurgerConstructorState
+    burgerConstructor: IBurgerConstructorState,
+    socket: ISocketState,
+    user: IUserState,
+    order: IOrderState
 }
+
+const actions: TSocketActions = {
+    open: socketActions.open,
+    onOpen: socketActions.onOpen,
+    setError: socketActions.setError,
+    close: socketActions.close,
+    onClose: socketActions.onClose,
+    setOrders: socketActions.setOrders,
+};
 
 export const store = configureStore({
     reducer: {
         burgerIngredients: burgerIngredientsReducer,
-        burgerConstructor: burgerConstructor,
+        burgerConstructor: burgerConstructorReducer,
+        socket: socketReducer,
+        user: userReducer,
+        order: orderReducer,
     },
+    middleware: getDefaultMiddleware => {
+        return getDefaultMiddleware().concat([socketMiddleware(actions)]);
+    }
 });
 
 export const getCategoriesState = createSelector(
@@ -39,6 +61,19 @@ export const getCategoriesState = createSelector(
     ),
 );
 
-export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>()
-export const useAppSelector: TypedUseSelectorHook<IStoreState> = useSelector
+export const createIsLoadingSelector = createSelector(
+    (state: IStoreState) => (state),
+    (state: IStoreState) => state.burgerIngredients.ingredientsRequest 
+        || state.burgerConstructor.orderNumberRequest
+        || state.user.userRequest
+);
+
+export const createOrderNumbersSelector = (status: string) => createSelector(
+    (state: IStoreState) => state.socket.orders,
+    (orders) => orders?.orders.filter(order => order.status === status).map(order => order.number)
+);
+
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<IStoreState> = useSelector;
+export type RootState = ReturnType<typeof store.getState>;

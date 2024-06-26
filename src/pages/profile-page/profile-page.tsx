@@ -1,17 +1,19 @@
 import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import styles from './profile-page.module.css';
-import { FC, useContext } from "react";
-import { AuthContext } from "../../services/auth";
+import { FC } from "react";
+import { useAppDispatch, useAppSelector } from "../../services";
+import { logoutThunk } from "../../services/user";
 
 const ProfilePage: FC = () => {
-    const { logout, ...auth } = useContext(AuthContext);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(store => store.user.user);
 
-    if (!auth.user) {
+    if (!user) {
         return (<Navigate to={'/login'} replace />);
     }
 
     const onLogout = () => {
-        logout();
+        dispatch(logoutThunk());
     }
 
     return (

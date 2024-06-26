@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { FC, ReactElement, useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../services/auth';
+import { FC, ReactElement, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../services';
+import { getUserThunk } from '../services/user';
 
 type TAuthProtectedRouteProps = {
     children: ReactElement;
@@ -8,13 +9,14 @@ type TAuthProtectedRouteProps = {
 };
 
 export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children, anonymous = false }) => {
-    let { getUser, ...auth } = useContext(AuthContext);
+    let user = useAppSelector(store => store.user.user);
+    const dispatch = useAppDispatch();
     const [isUserLoaded, setUserLoaded] = useState(false);
     const location = useLocation();
     const from = location.state?.from || '/';
 
     const init = async () => {
-        await getUser();
+        dispatch(getUserThunk());
         setUserLoaded(true);
     };
 
@@ -26,11 +28,11 @@ export const AuthProtectedRoute: FC<TAuthProtectedRouteProps> = ({ children, ano
         return null;
     }
 
-    if (anonymous && !!auth.user) {
+    if (anonymous && !!user) {
         return <Navigate to={ from } />;
     }
 
-    if (!anonymous && !auth.user) {
+    if (!anonymous && !user) {
         return <Navigate to="/login" state={{ from: location }}/>;
     }
 
