@@ -1,4 +1,4 @@
-export interface IFeed {
+export interface IOrders {
     success: boolean,
     orders: Array<IOrder>,
     total: number,

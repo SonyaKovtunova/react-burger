@@ -1,6 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { ordersActions } from "./orders";
-import { IFeed } from "../interfaces/feed";
+// import { ordersActions } from "./orders";
 import { IStoreState } from ".";
 
 const ordersMiddleware: Middleware = store => {
@@ -10,7 +9,7 @@ const ordersMiddleware: Middleware = store => {
         const { dispatch, getState } = store;
         const { token } = (getState() as IStoreState).user;
 
-        if (ordersActions.startConnecting.match(action) && token && !socket) {
+        /*if (ordersActions.startConnecting.match(action) && token && !socket) {
             socket = new WebSocket(`wss://norma.nomoreparties.space/orders?token=${token}`);
     
             socket.onopen = () => {
@@ -23,8 +22,8 @@ const ordersMiddleware: Middleware = store => {
     
             socket.onmessage = (event) => {
                 const { data } = event;
-                const feed: IFeed = JSON.parse(data);
-                dispatch(ordersActions.setOrders(feed));
+                // const feed: IFeed = JSON.parse(data);
+                // dispatch(ordersActions.setOrders(feed));
             };
     
             socket.onclose = () => {
@@ -32,9 +31,8 @@ const ordersMiddleware: Middleware = store => {
             };
         }
         else if (socket && ordersActions.close.match(action)) {
-            debugger
             socket.close();
-        }
+        }*/
 
         next(action);
     }

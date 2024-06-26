@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { IOrder } from "../../../interfaces/feed";
+import { IOrder } from "../../../interfaces/orders";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useAppSelector } from "../../../services";
 import { IIngredientData } from "../../../interfaces/ingredient-data-interface";

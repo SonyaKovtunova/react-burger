@@ -1,30 +1,44 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import Order from "./order/order";
 import styles from './feed.module.css';
 import OrdersByStatus from "./orders-by-status/orders-by-status";
-import { IOrder } from "../../interfaces/feed";
+import { IOrder } from "../../interfaces/orders";
 import { setOrder } from "../../services/order";
+import { socketActions } from "../../services/socket";
 
 const Feed: FC = () => {
     const location = useLocation();
-    const feed = useAppSelector(store => store.feed.feed);
+    const isConnected = useAppSelector(store => store.socket.isConnected);
+    const orders = useAppSelector(store => store.socket.orders);
 
     const dispatch = useAppDispatch();
-    
+
+    useEffect(() => {
+        if (!isConnected) {
+            dispatch(socketActions.open({ url: 'wss://norma.nomoreparties.space/orders/all' }));
+        }
+        
+        return () => {
+            if (isConnected) {
+                dispatch(socketActions.close());
+            }
+        }
+    }, [dispatch, isConnected]);
+
     const selectOrder = (order: IOrder) => {
         dispatch(setOrder(order));
     }
 
     return (
-        <>
+        <div className={styles.grid}>
             <div>
                 <p className="text text_type_main-large mb-5">Лента заказов</p>
                 <div className={`${styles.orderList} custom-scroll`}>
                     {
-                        feed?.orders.map((order, index) => (
-                            <div key={index} className={`${index < feed.orders.length - 1 ? 'mb-4' : ''}`}>
+                        orders?.orders.map((order, index) => (
+                            <div key={index} className={`${index < orders.orders.length - 1 ? 'mb-4' : ''}`}>
                                 <Link to={`/feed/${order._id}`} state={{ background: location }} className={styles.link} onClick={() => selectOrder(order)}>
                                     <Order order={order}  /> 
                                 </Link>    
@@ -39,11 +53,11 @@ const Feed: FC = () => {
                     <OrdersByStatus status='pending' />
                 </div>
                 <p className="text text_type_main-medium pt-15">Выполнено за все время:</p>
-                <p className={`text text_type_digits-large ${styles.total}`}>{feed?.total}</p>
+                <p className={`text text_type_digits-large ${styles.total}`}>{orders?.total}</p>
                 <p className="text text_type_main-medium pt-15">Выполнено за сегодня:</p>
-                <p className={`text text_type_digits-large ${styles.total}`}>{feed?.totalToday}</p>
+                <p className={`text text_type_digits-large ${styles.total}`}>{orders?.totalToday}</p>
             </div>
-        </>
+        </div>
     );
 }
  

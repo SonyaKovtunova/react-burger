@@ -1,15 +1,29 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../services";
 import { Link, useLocation } from "react-router-dom";
 import Order from "./order/order";
 import styles from './orders.module.css';
-import { IOrder } from "../../interfaces/feed";
+import { IOrder } from "../../interfaces/orders";
 import { setOrder } from "../../services/order";
+import { socketActions } from "../../services/socket";
 
 const Orders: FC = () => {
     const location = useLocation();
-    const orders = useAppSelector(store => store.orders.orders);
+    const isConnected = useAppSelector(store => store.socket.isConnected);
+    const orders = useAppSelector(store => store.socket.orders);
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (!isConnected) {
+            dispatch(socketActions.open({ url: 'wss://norma.nomoreparties.space/orders' }));
+        }
+        
+        return () => {
+            if (isConnected) {
+                dispatch(socketActions.close());
+            }
+        }
+    }, [dispatch, isConnected]);
 
     const selectOrder = (order: IOrder) => {
         dispatch(setOrder(order));

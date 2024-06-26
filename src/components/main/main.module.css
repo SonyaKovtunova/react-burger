@@ -1,3 +1,13 @@
+.grid {
+    display: grid;
+    grid-template-columns: calc(100% - 660px) 620px;
+    gap: 40px;
+
+    @media screen and (max-width : 1270px) {
+        grid-template-columns: 100%;
+    }
+}
+
 .burgerIngredientsWrapper {
     min-width: 600px;
     

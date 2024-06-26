@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { IOrder } from "../../../interfaces/feed";
+import { IOrder } from "../../../interfaces/orders";
 import { useAppSelector } from "../../../services";
 import { IIngredientData } from "../../../interfaces/ingredient-data-interface";
 import { getInredientsSum } from "../../../utils/utils";

@@ -73,7 +73,7 @@ export const registerThunk = createAsyncThunk<IUser | null, { email: string, nam
 export const sendPasswordResetCodeThunk = createAsyncThunk<void, { email: string }>(
     "user/sendPasswordResetCode",
     async ({ email }) => {
-        var data = await sendPasswordResetCode(email);
+        const data = await sendPasswordResetCode(email);
 
         if (data.success) {
             localStorage.setItem('waitForResetPassword', '1');

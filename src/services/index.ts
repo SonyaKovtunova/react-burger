@@ -3,33 +3,38 @@ import burgerIngredientsReducer, { IBurgerIngredientsState } from "./burger-ingr
 import burgerConstructorReducer, { IBurgerConstructorState } from "./burger-constructor";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { ICategoryData } from "../interfaces/category-data-interface";
-import feedReducer, { IFeedState } from "./feed";
-import feedMiddleware from "./feed-middleware";
 import userReducer, { IUserState } from "./user";
-import ordersReducer, { IOrdersState } from "./orders";
-import ordersMiddleware from "./orders-middleware";
 import orderReducer, { IOrderState } from "./order";
+import socketMiddleware from "./socket-middleware";
+import socketReducer, { ISocketState, TSocketActions, socketActions } from "./socket";
 
 export interface IStoreState {
     burgerIngredients: IBurgerIngredientsState,
     burgerConstructor: IBurgerConstructorState,
-    feed: IFeedState,
+    socket: ISocketState,
     user: IUserState,
-    orders: IOrdersState,
     order: IOrderState
 }
+
+const actions: TSocketActions = {
+    open: socketActions.open,
+    onOpen: socketActions.onOpen,
+    setError: socketActions.setError,
+    close: socketActions.close,
+    onClose: socketActions.onClose,
+    setOrders: socketActions.setOrders,
+};
 
 export const store = configureStore({
     reducer: {
         burgerIngredients: burgerIngredientsReducer,
         burgerConstructor: burgerConstructorReducer,
-        feed: feedReducer,
+        socket: socketReducer,
         user: userReducer,
-        orders: ordersReducer,
         order: orderReducer,
     },
     middleware: getDefaultMiddleware => {
-        return getDefaultMiddleware().concat([feedMiddleware, ordersMiddleware]);
+        return getDefaultMiddleware().concat([socketMiddleware(actions)]);
     }
 });
 
@@ -64,8 +69,8 @@ export const createIsLoadingSelector = createSelector(
 );
 
 export const createOrderNumbersSelector = (status: string) => createSelector(
-    (state: IStoreState) => state.feed.feed,
-    (feed) => feed?.orders.filter(order => order.status === status).map(order => order.number)
+    (state: IStoreState) => state.socket.orders,
+    (orders) => orders?.orders.filter(order => order.status === status).map(order => order.number)
 );
 
 export type AppDispatch = typeof store.dispatch;

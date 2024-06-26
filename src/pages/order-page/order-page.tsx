@@ -1,13 +1,12 @@
 import { FC } from "react";
 import OrderDetail from "../../components/order-detail/order-detail";
+import styles from './order-page.module.css';
 
-type TOrderDetailProps = {
-    withToken: boolean;
-}
-
-const OrderPage: FC<TOrderDetailProps> = ({ withToken = false }) => {
+const OrderPage: FC = () => {
     return (
-        <OrderDetail withToken={withToken} />
+        <div className={styles.page}>
+            <OrderDetail />
+        </div>
     );
 }
  

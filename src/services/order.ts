@@ -1,24 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getOrder, getOrderWithToken } from "../utils/burger-api";
-import { IFeed, IOrder } from "../interfaces/feed";
+import { IOrder, IOrders } from "../interfaces/orders";
 import { IStoreState } from ".";
 import { getCookie } from "../utils/cookies";
 
-export const getOrderThunk = createAsyncThunk<IFeed, { id: string, withToken: boolean }>(
+export const getOrderThunk = createAsyncThunk<IOrders, string>(
     "order/get",
     async (request, { getState }) => {
-        if (request.withToken) {
-            const refreshToken = getCookie('token');
-            const { token } = (getState() as IStoreState).user;
+        const refreshToken = getCookie('token');
+        const { token } = (getState() as IStoreState).user;
 
-            if (!refreshToken) {
-                return await getOrder(request.id);
-            }
-
-            return await getOrderWithToken(request.id, token, refreshToken);
+        if (!token || !refreshToken) {
+            return await getOrder(request);
         }
 
-        return await getOrder(request.id);
+        return await getOrderWithToken(request, token, refreshToken);
     }
 );
 

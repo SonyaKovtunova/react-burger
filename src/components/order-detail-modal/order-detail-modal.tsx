@@ -3,11 +3,7 @@ import Modal from "../modal/modal";
 import OrderDetail from "../order-detail/order-detail";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-type TOrderDetailProps = {
-    withToken: boolean;
-}
-
-const OrderDetailModal: FC<TOrderDetailProps> = ({ withToken = false }) => {
+const OrderDetailModal: FC = () => {
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
@@ -24,7 +20,7 @@ const OrderDetailModal: FC<TOrderDetailProps> = ({ withToken = false }) => {
         {
             params['id'] &&
                 <Modal onClose={closeModal}>
-                    <OrderDetail withToken={withToken} />
+                    <OrderDetail />
                 </Modal>
         }
     </>);

@@ -8,12 +8,14 @@ import { FC } from 'react';
 const Main: FC = () => {
     return (
         <DndProvider backend={HTML5Backend}>
-            <div className={mainStyles.burgerIngredientsWrapper}>
-                <BurgerIngredients />
+            <div className={mainStyles.grid}>
+                <div className={mainStyles.burgerIngredientsWrapper}>
+                    <BurgerIngredients />
+                </div>
+                <div className={mainStyles.burgerConstructorWrapper}>
+                    <BurgerConstructor />
+                </div>     
             </div>
-            <div className={mainStyles.burgerConstructorWrapper}>
-                <BurgerConstructor />
-            </div>   
         </DndProvider>
     );
 }

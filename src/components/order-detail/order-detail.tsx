@@ -7,11 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getInredientsSum } from "../../utils/utils";
 import { getOrderThunk } from "../../services/order";
 
-type TOrderDetailProps = {
-    withToken: boolean;
-}
-
-const OrderDetail: FC<TOrderDetailProps> = ({ withToken = false }) => {
+const OrderDetail: FC = () => {
     const order = useAppSelector(store => store.order.order);
     const ingredients = useAppSelector(store => store.burgerIngredients.ingredients);
 
@@ -25,7 +21,7 @@ const OrderDetail: FC<TOrderDetailProps> = ({ withToken = false }) => {
 
     useEffect(() => {
         if (!order && params['id']) {
-            dispatch(getOrderThunk({ id: params['id'], withToken : withToken }));
+            dispatch(getOrderThunk(params['id']));
         }
     }, [order, params, dispatch]);
 
@@ -48,6 +44,19 @@ const OrderDetail: FC<TOrderDetailProps> = ({ withToken = false }) => {
 
     const sum = useMemo(() => getInredientsSum(orderIngredients), [orderIngredients]);
 
+    const orderIngredientGroups = useMemo(() => 
+        orderIngredients?.reduce((result, item) => {
+            const foundItem = result.find(i => i.item._id === item._id);
+
+            if (foundItem) {
+                foundItem.count++;
+            } else {
+                result.push({ item, count: 1 });
+            }
+            return result;
+        }, [] as Array<{item: IIngredientData, count: number}>), 
+        [orderIngredients]);
+
     return (
         <div className={styles.order}>
             <p className="text text_type_digits-default mb-10">#{order?.number}</p>
@@ -69,15 +78,15 @@ const OrderDetail: FC<TOrderDetailProps> = ({ withToken = false }) => {
                 <p className="text text_type_main-medium mb-6">Состав:</p>
                 <div className={`${styles.ingredients} custom-scroll`}>
                     {
-                        orderIngredients?.map((ingredient, index) => (
-                            <div key={index} className={`${styles.ingredient} ${index < orderIngredients.length - 1 ? 'mb-4' : ''}`}>
+                        orderIngredientGroups?.map((ingredient, index) => (
+                            <div key={index} className={`${styles.ingredient} ${index < orderIngredientGroups.length - 1 ? 'mb-4' : ''}`}>
                                 <div className={styles.ingredientInfo}>
                                     <div className={styles.imageWrapper}>
-                                        <img className={styles.image} key={index} src={ingredient.image} alt="" />    
+                                        <img className={styles.image} key={index} src={ingredient.item.image} alt="" />    
                                     </div>
-                                    <p className="text text_type_main-default">{ingredient.name}</p>
+                                    <p className="text text_type_main-default">{ingredient.item.name}</p>
                                 </div>
-                                <p className="text text_type_digits-default">1 x {ingredient.price} <CurrencyIcon type="primary" /></p>
+                                <p className="text text_type_digits-default">{ingredient.count} x {ingredient.item.price} <CurrencyIcon type="primary" /></p>
                             </div>
                         ))
                     }

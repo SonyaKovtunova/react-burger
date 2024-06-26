@@ -1,19 +1,11 @@
 .main {
-    display: grid;
-    grid-template-columns: calc(100% - 660px) 620px;
     padding: 40px 340px;
-    gap: 40px;
-
     @media screen and (max-width : 1870px) {
         padding: 40px 140px;
     }
 
     @media screen and (max-width : 1470px) {
         padding: 40px;
-    }
-
-    @media screen and (max-width : 1270px) {
-        grid-template-columns: 100%;
     }
     
     @media screen and (max-width : 800px) {

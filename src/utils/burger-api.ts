@@ -4,7 +4,7 @@ import { IOrderRequest } from "../interfaces/order-request";
 import { IOrderResponse } from "../interfaces/order-response";
 import { IAuthResponse } from "../interfaces/auth-response";
 import { ICommonResponse } from "../interfaces/common-response";
-import { IFeed } from "../interfaces/feed";
+import { IOrders } from "../interfaces/orders";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
 
@@ -130,7 +130,7 @@ export const createOrder = (data: IOrderRequest, accessToken: string | null, ref
 export const getOrder = (id: string) => {
     return sendRequest(`${URL}/orders/${id}`)
         .then((response) => {
-            const data = response as IFeed;
+            const data = response as IOrders;
             return data;
         });
 }
@@ -138,7 +138,7 @@ export const getOrder = (id: string) => {
 export const getOrderWithToken = (id: string, accessToken: string | null, refreshToken: string) => {
     return sendRequestWithRefreshToken(`${URL}/orders/${id}`, accessToken, refreshToken)
         .then((response) => {
-            const data = response as IFeed;
+            const data = response as IOrders;
             return data;
         });
 }
