@@ -4,10 +4,11 @@ import { IOrderRequest } from "../interfaces/order-request";
 import { IOrderResponse } from "../interfaces/order-response";
 import { IAuthResponse } from "../interfaces/auth-response";
 import { ICommonResponse } from "../interfaces/common-response";
+import { IOrders } from "../interfaces/orders";
 
 const URL: string = 'https://norma.nomoreparties.space/api';
 
-export const sendLoginRequest = (email: string, password: string) => {
+export const sendLogin = (email: string, password: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -21,7 +22,7 @@ export const sendLoginRequest = (email: string, password: string) => {
         .then((response) => response as IAuthResponse);
 }
 
-export const sendLogoutRequest = (token: string) => {
+export const sendLogout = (token: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -35,7 +36,7 @@ export const sendLogoutRequest = (token: string) => {
         .then((response) => response as IAuthResponse);
 }
 
-export const sendRegisterRequest = (email: string, name: string, password: string) => {
+export const sendRegister = (email: string, name: string, password: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -49,7 +50,7 @@ export const sendRegisterRequest = (email: string, name: string, password: strin
         .then((response) => response as IAuthResponse);
 }
 
-export const sendPasswordResetCodeRequest = (email: string) => {
+export const sendPasswordResetCode = (email: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -63,7 +64,7 @@ export const sendPasswordResetCodeRequest = (email: string) => {
         .then((response) => response as IAuthResponse);
 }
 
-export const sendResetPasswordRequest = (password: string, token: string) => {
+export const sendResetPassword = (password: string, token: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -77,7 +78,7 @@ export const sendResetPasswordRequest = (password: string, token: string) => {
         .then((response) => response as IAuthResponse);
 }
 
-export const sendGetUserRequest = (accessToken: string, refreshToken: string) => {
+export const sendGetUser = (accessToken: string | null, refreshToken: string) => {
     const request: RequestInit = {
         method: 'GET',
         headers: new Headers()
@@ -87,7 +88,7 @@ export const sendGetUserRequest = (accessToken: string, refreshToken: string) =>
         .then((response) => response as IAuthResponse);
 }
 
-export const sendUpdateUserRequest = (email: string, name: string, password: string, accessToken: string, refreshToken: string) => {
+export const sendUpdateUser = (email: string, name: string, password: string, accessToken: string | null, refreshToken: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -109,7 +110,7 @@ export const getIngredients = () => {
         });
 }
 
-export const createOrder = (data: IOrderRequest) => {
+export const createOrder = (data: IOrderRequest, accessToken: string | null, refreshToken: string) => {
     const headers: HeadersInit = new Headers();
     headers.set('Content-Type', 'application/json');
 
@@ -119,37 +120,49 @@ export const createOrder = (data: IOrderRequest) => {
         body: JSON.stringify(data),
     };
 
-    return sendRequest(`${URL}/orders`, request)
+    return sendRequestWithRefreshToken(`${URL}/orders`, accessToken, refreshToken, request)
         .then((response) => {
             const data = response as IOrderResponse;
             return data.order?.number;
         });
 }
 
-const sendRequestWithRefreshToken = (url: string, accessToken: string, refreshToken: string, options: RequestInit = {}) => {
+export const getOrder = (id: string) => {
+    return sendRequest(`${URL}/orders/${id}`)
+        .then((response) => {
+            const data = response as IOrders;
+            return data;
+        });
+}
+
+export const getOrderWithToken = (id: string, accessToken: string | null, refreshToken: string) => {
+    return sendRequestWithRefreshToken(`${URL}/orders/${id}`, accessToken, refreshToken)
+        .then((response) => {
+            const data = response as IOrders;
+            return data;
+        });
+}
+
+const sendRequestWithRefreshToken = (url: string, accessToken: string | null, refreshToken: string, options: RequestInit = {}) => {
     options = resetHeader(options, 'Authorization', `Bearer ${accessToken}`);
 
     return sendRequest(url, options)
         .then(data => ({ ...data, accessToken : `Bearer ${accessToken}`, refreshToken: refreshToken }))
         .catch((err: ICommonResponse) => {
-            if (err.message === 'jwt expired') {
-                return sendRefreshTokenRequest(refreshToken)
-                    .then(refreshTokenData => {
-                        if (refreshTokenData.success) {
-                            options = resetHeader(options, 'Authorization', refreshTokenData.accessToken);
-                            return sendRequest(url, options)
-                                .then(data => ({ 
-                                    ...data, 
-                                    accessToken: refreshTokenData.accessToken, 
-                                    refreshToken: refreshTokenData.refreshToken 
-                                }));
-                        }
+            return sendRefreshTokenRequest(refreshToken)
+                .then(refreshTokenData => {
+                    if (refreshTokenData.success) {
+                        options = resetHeader(options, 'Authorization', refreshTokenData.accessToken);
+                        return sendRequest(url, options)
+                            .then(data => ({ 
+                                ...data, 
+                                accessToken: refreshTokenData.accessToken, 
+                                refreshToken: refreshTokenData.refreshToken 
+                            }));
+                    }
 
-                        return Promise.reject(refreshTokenData);
-                    })
-            } 
-            
-            return Promise.reject(err);
+                    return Promise.reject(refreshTokenData);
+                });
         });
 }
 

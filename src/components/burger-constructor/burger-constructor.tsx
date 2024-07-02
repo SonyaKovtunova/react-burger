@@ -2,7 +2,7 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import BurgerConstructorItem from './burger-constructor-item/burger-constructor-item';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { IIngredientData } from '../../interfaces/ingredient-data-interface';
-import { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import OrderDetails from './order-details/order-details';
 import Modal from '../modal/modal';
 import { addIngredient, clearOrderNumber, createOrderThunk, sortIngredients,updateBun } from '../../services/burger-constructor';
@@ -12,12 +12,13 @@ import EmptyItem from './empty-item/empty-item';
 import { useDrop } from 'react-dnd';
 import { CATEGORIES, INGREDIENT_DND_NAME } from '../../utils/constants';
 import BunItem from './bun-item/bun-item';
-import { AuthContext } from '../../services/auth';
 import { useNavigate } from 'react-router-dom';
+import { getInredientsSum } from '../../utils/utils';
 
 const BurgerConstructor: FC = () => {
     const [ modalIsVisible, setModalIsVisible ] = useState(false);
 
+    const user = useAppSelector(store => store.user.user);
     const ingredients = useAppSelector(store => store.burgerConstructor.ingredients);
     const orderNumberIsCreated = useAppSelector(store => !!store.burgerConstructor.orderNumber 
         && !store.burgerConstructor.orderNumberRequest 
@@ -26,8 +27,6 @@ const BurgerConstructor: FC = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-
-    const { user }= useContext(AuthContext);
 
     useEffect(() => {
         if (orderNumberIsCreated) {
@@ -70,9 +69,7 @@ const BurgerConstructor: FC = () => {
         dispatch(clearOrderNumber());
     }, []);
 
-    const sum = useMemo(() => 
-        (bun?.price ?? 0) * 2 + ingredients.reduce((result, item) => result + item.price, 0) ?? 0,
-    [bun, ingredients]);
+    const sum = useMemo(() => getInredientsSum(bun ? ingredients.concat([bun, bun]) : ingredients), [bun, ingredients]);
 
     const moveIngredient = useCallback((dragIndex: number, hoverIndex: number) => {
         dispatch(sortIngredients({ dragIndex, hoverIndex }));

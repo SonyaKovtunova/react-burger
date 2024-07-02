@@ -1,13 +1,14 @@
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { FC, FormEvent, useContext } from 'react';
+import { FC, FormEvent } from 'react';
 import styles from './register-page.module.css';
-import { AuthContext } from '../../services/auth';
-import { useForm } from '../../components/user-form';
+import { useForm } from "../../hooks/user-form";
+import { useAppDispatch } from '../../services';
+import { registerThunk } from '../../services/user';
 
 const RegisterPage: FC = () => {
     const [ form, _, onChange ] = useForm({ name: '', email: '', password: '' });
-    const { register } = useContext(AuthContext);
+    const dispatch = useAppDispatch();
     
     const onRegister = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,7 +17,7 @@ const RegisterPage: FC = () => {
             return;
         }
 
-        register(form['email'], form['name'], form['password']);
+        dispatch(registerThunk({ email: form['email'], name: form['name'], password: form['password'] }));
     }
 
     return (

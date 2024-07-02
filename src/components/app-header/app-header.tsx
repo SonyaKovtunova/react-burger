@@ -17,12 +17,16 @@ const AppHeader: FC = () => {
                         </>
                     )}
                 </NavLink>
-                <button className={appHeaderStyles.button}>
-                     <ListIcon type="secondary" />
-                    <p className="text text_type_main-default text_color_inactive">
-                        Лента заказов
-                    </p>
-                </button>
+                <NavLink to={'/feed'} className={`${appHeaderStyles.link}`}>
+                    {({isActive}) => (
+                        <>
+                            <ListIcon type={isActive ? 'primary' : 'secondary'} />
+                            <p className={`text text_type_main-default ml-2 ${isActive ? '' : 'text_color_inactive'}`}>
+                                Лента заказов
+                            </p>
+                        </>
+                    )}
+                </NavLink>
             </nav>
             <div className={appHeaderStyles.logoWrapper}>
                 <Logo />
@@ -33,7 +37,7 @@ const AppHeader: FC = () => {
                         <>
                             <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
                             <p className={`text text_type_main-default ml-2 ${isActive ? '' : 'text_color_inactive'}`}>
-                            Личный кабинет
+                                Личный кабинет
                             </p>
                         </>
                     )}

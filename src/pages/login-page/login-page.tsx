@@ -1,13 +1,14 @@
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
-import { FC, FormEvent, useContext } from 'react';
+import { FC, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './login-page.module.css';
-import { AuthContext } from '../../services/auth';
-import { useForm } from '../../components/user-form';
+import { useForm } from "../../hooks/user-form";
+import { useAppDispatch } from '../../services';
+import { loginThunk } from '../../services/user';
 
 const LoginPage: FC = () => {
     const [ form, _, onChange ] = useForm({ email: '', password: '' });
-    const { login } = useContext(AuthContext);
+    const dispatch = useAppDispatch();
 
     const onLogin = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,7 +17,7 @@ const LoginPage: FC = () => {
             return;
         }
         
-        login(form['email'], form['password']);
+        dispatch(loginThunk({ email: form['email'], password: form['password'] }));
     }
 
     return (

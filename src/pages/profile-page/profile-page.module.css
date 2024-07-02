@@ -1,6 +1,6 @@
 .profilePageWrapper {
     margin-top: 116px;
-    height: calc(100vh - 112px - 116px);
+    height: calc(100vh - 112px - 116px - 80px);
     display: flex;
     flex-direction: row;
     align-items: start;
@@ -8,15 +8,15 @@
     gap: 60px;
 
     @media screen and (max-width : 1470px) {
-        height: calc(100vh - 136px - 116px);
+        height: calc(100vh - 136px - 116px - 80px);
     }
 
     @media screen and (max-width : 1024px) {
-        height: calc(100vh - 112px - 116px);
+        height: calc(100vh - 112px - 116px - 80px);
     }
     
     @media screen and (max-width : 800px) {
-        height: calc(100vh - 96px - 116px);
+        height: calc(100vh - 96px - 116px - 24px);
     }
 }
 
