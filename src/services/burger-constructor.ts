@@ -23,7 +23,7 @@ export const createOrderThunk = createAsyncThunk<string, IOrderRequest, { reject
 
         return await createOrder(request, token, refreshToken);
     }
-  );
+);
 
 export interface IBurgerConstructorState {
     ingredients: IIngredientData[],
@@ -33,7 +33,7 @@ export interface IBurgerConstructorState {
     orderNumberFailed: boolean,
 }
 
-const initialState: IBurgerConstructorState = {
+export const initialState: IBurgerConstructorState = {
     ingredients: [],
     bun: null,
     orderNumber: null,
