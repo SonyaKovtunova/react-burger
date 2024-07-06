@@ -10,7 +10,7 @@ type TBunItemItemProps = {
 
 const BunItem: FC<TBunItemItemProps> = ({ type = 'top', ingredient }) => {
     return (
-        <div className={bunItemStyles.item}>
+        <div className={bunItemStyles.item} data-bun-id={ingredient._id}>
             <div></div>
             <ConstructorElement 
                 type={type}

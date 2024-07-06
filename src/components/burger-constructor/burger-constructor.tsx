@@ -77,7 +77,7 @@ const BurgerConstructor: FC = () => {
 
     return (
         <> 
-            <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget}>
+            <div className={burgerConstructorStyles.burgerConstructor} ref={dropTarget} data-constructor>
                 <div className={`${burgerConstructorStyles.list} custom-scroll`}>
                     {
                         bun 
@@ -102,7 +102,7 @@ const BurgerConstructor: FC = () => {
                     <div className={burgerConstructorStyles.sumWrapper}>
                         <p className="text text_type_main-large">{sum} <CurrencyIcon type="primary" /></p>
                     </div>
-                    <div className={burgerConstructorStyles.buttonWrapper}>
+                    <div className={burgerConstructorStyles.buttonWrapper} data-button="createOrder">
                         <Button htmlType="button" type="primary" size="large" onClick={createOrder}>
                             Оформить заказ
                         </Button>    
