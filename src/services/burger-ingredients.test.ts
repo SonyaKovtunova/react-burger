@@ -1,5 +1,6 @@
 import { IIngredientData } from "../interfaces/ingredient-data-interface";
 import { burgerIngredientsSlice, getIngredientsThunk, initialState } from "./burger-ingredients";
+import { ingredient } from "./constants";
 
 describe("burger ingredients reducer", () => {
     it("initialize correcty", () => {
@@ -29,42 +30,13 @@ describe("burger ingredients reducer", () => {
             type: "test prev",
         };
 
-        const payload: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
-
-        const action = { type: burgerIngredientsSlice.actions.setSelectedIngredient.type, payload };
+        const action = { type: burgerIngredientsSlice.actions.setSelectedIngredient.type, payload: ingredient };
         const state = burgerIngredientsSlice.reducer({...initialState, selectedIngredient: prevelectedIngredient }, action);
 
-        expect(state).toEqual({...initialState, selectedIngredient: payload });
+        expect(state).toEqual({...initialState, selectedIngredient: ingredient });
     });
 
     it("clear selected ingredient", () => {
-        const ingredient: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-            dndUniqueId: undefined,
-        };
-
         const action = { type: burgerIngredientsSlice.actions.clearSelectedIngredient.type };
         const state = burgerIngredientsSlice.reducer({...initialState, selectedIngredient: ingredient }, action);
 
@@ -79,20 +51,6 @@ describe("burger ingredients reducer", () => {
     });
 
     it("get ingredients fulfilled", () => {
-        const ingredient: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
-
         const action = { type: getIngredientsThunk.fulfilled.type, payload: [ingredient] };
         const state = burgerIngredientsSlice.reducer({ ...initialState, ingredientsRequest: true }, action);
 

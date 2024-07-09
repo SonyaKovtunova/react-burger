@@ -1,5 +1,6 @@
 import { IIngredientData } from '../interfaces/ingredient-data-interface';
 import { burgerConstructorSlice, createOrderThunk, initialState } from './burger-constructor';
+import { ingredient } from './constants';
 
 describe("burger constructor reducer", () => {
     it("initialize correcty", () => {
@@ -8,24 +9,10 @@ describe("burger constructor reducer", () => {
     });
 
     it("update bun when initial bun is null", () => {
-        const payload: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
-
-        const action = { type: burgerConstructorSlice.actions.updateBun.type, payload };
+        const action = { type: burgerConstructorSlice.actions.updateBun.type, payload: ingredient };
         const state = burgerConstructorSlice.reducer(initialState, action);
 
-        expect(state).toEqual({...initialState, bun: payload });
+        expect(state).toEqual({...initialState, bun: ingredient });
     });
 
     it("update bun when initial bun is not null", () => {
@@ -43,43 +30,14 @@ describe("burger constructor reducer", () => {
             type: "test prev",
         };
 
-        const payload: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
-
-        const action = { type: burgerConstructorSlice.actions.updateBun.type, payload };
+        const action = { type: burgerConstructorSlice.actions.updateBun.type, payload: ingredient };
         const state = burgerConstructorSlice.reducer({...initialState, bun: prevBun }, action);
 
-        expect(state).toEqual({...initialState, bun: payload });
+        expect(state).toEqual({...initialState, bun: ingredient });
     });
 
     it("add ingredient", () => {
-        const payload: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-            dndUniqueId: undefined,
-        };
-
-        const action = { type: burgerConstructorSlice.actions.addIngredient.type, payload };
+        const action = { type: burgerConstructorSlice.actions.addIngredient.type, payload: ingredient };
         const state = burgerConstructorSlice.reducer(initialState, action);
 
         expect(state).not.toBeNull();
@@ -87,23 +45,10 @@ describe("burger constructor reducer", () => {
         expect(state.ingredients.length).toEqual(1);
         expect(state.ingredients[0]).not.toBeNull();
         expect(state.ingredients[0].dndUniqueId).not.toBeNull();
-        expect(state).toEqual({...initialState, ingredients: [...initialState.ingredients, payload] });
+        expect(state).toEqual({...initialState, ingredients: [...initialState.ingredients, ingredient] });
     });
 
     it("delete element when index is not found", () => {
-        const ingredient: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
         const prevState = {...initialState, ingredients: [ingredient] };
 
         const action = { type: burgerConstructorSlice.actions.deleteIngredient.type, payload: 1 };
@@ -113,19 +58,6 @@ describe("burger constructor reducer", () => {
     });
 
     it("delete element when index is found", () => {
-        const ingredient: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
         const prevState = {...initialState, ingredients: [ingredient] };
 
         const action = { type: burgerConstructorSlice.actions.deleteIngredient.type, payload: 0 };
@@ -135,19 +67,6 @@ describe("burger constructor reducer", () => {
     });
 
     it("sort ingredients", () => {
-        const ingredient1: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
         const ingredient2: IIngredientData = {
             _id: "test2",
             name: "test2",
@@ -161,12 +80,12 @@ describe("burger constructor reducer", () => {
             image_large: "test2",
             type: "test2",
         };
-        const prevState = {...initialState, ingredients: [ingredient1, ingredient2] };
+        const prevState = {...initialState, ingredients: [ingredient, ingredient2] };
 
         const action = { type: burgerConstructorSlice.actions.sortIngredients.type, payload: { dragIndex: 0, hoverIndex: 1 } };
         const state = burgerConstructorSlice.reducer(prevState, action);
 
-        expect(state).toEqual({...prevState, ingredients: [ingredient2, ingredient1]});
+        expect(state).toEqual({...prevState, ingredients: [ingredient2, ingredient]});
     });
 
     it("clear order number", () => {
@@ -184,20 +103,6 @@ describe("burger constructor reducer", () => {
     });
 
     it("create order fulfilled", () => {
-        const ingredient: IIngredientData = {
-            _id: "test",
-            name: "test",
-            proteins: 1,
-            fat: 1,
-            carbohydrates: 1,
-            calories: 1,
-            price: 1,
-            image: "test",
-            image_mobile: "test",
-            image_large: "test",
-            type: "test",
-        };
-
         const action = { type: createOrderThunk.fulfilled.type, payload: "test" };
         const state = burgerConstructorSlice.reducer({ ...initialState, ingredients: [ingredient], bun: ingredient, orderNumberRequest: true }, action);
 

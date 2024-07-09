@@ -1,8 +1,11 @@
+const reactModalsSelector = '[data-react-modals=true]';
+const createOrderButtonSelector = '[data-button="createOrder"]';
+
 context('Клиентский путь для оформления заказа', () => {
   beforeEach(() => {
     cy.setCookie('token', 'refreshToken');
     window.localStorage.setItem('token', 'accessToken');
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
 
     cy.fixture('ingredients.json').then((json) => {
       cy.intercept('GET', '**/ingredients', json).as('getIngredients')
@@ -21,12 +24,12 @@ context('Клиентский путь для оформления заказа'
   it('Детали ингредиента', () => {
     const ingredientId = '60666c42cc7b410027a1a9b5';
     cy.get(`[data-ingredient-id=${ingredientId}]`).click();
-    cy.get('[data-react-modals=true]').contains('Детали ингредиента');
-    cy.get('[data-react-modals=true]').children().children().last().should('have.attr', 'data-selected-ingredient-id', ingredientId);
-    cy.get('[data-react-modals=true]').click();
-    cy.get('[data-react-modals=true]').should('exist');
-    cy.get('[data-react-modals=true]').click(0, 0);
-    cy.get('[data-react-modals=true]').should('not.exist');
+    cy.get(reactModalsSelector).contains('Детали ингредиента');
+    cy.get(reactModalsSelector).children().children().last().should('have.attr', 'data-selected-ingredient-id', ingredientId);
+    cy.get(reactModalsSelector).click();
+    cy.get(reactModalsSelector).should('exist');
+    cy.get(reactModalsSelector).click(0, 0);
+    cy.get(reactModalsSelector).should('not.exist');
   })
 
   it('DnD булки', () => {
@@ -95,26 +98,26 @@ context('Клиентский путь для оформления заказа'
       cy.intercept('POST', '**/orders', json).as('createOrder')
     });
 
-    cy.get('[data-button="createOrder"]').click();
+    cy.get(createOrderButtonSelector).click();
     
-    cy.get('[data-react-modals=true]').should('not.exist'); 
+    cy.get(reactModalsSelector).should('not.exist'); 
 
     const bunId = '60666c42cc7b410027a1a9b2';
     cy.get(`[data-ingredient-id=${bunId}]`).trigger('dragstart');
     cy.get('[data-constructor=true]').trigger('drop');
 
-    cy.get('[data-button="createOrder"]').click();
-    cy.get('[data-react-modals=true]').should('exist').contains('123');
-    cy.get('[data-react-modals=true]').click();
-    cy.get('[data-react-modals=true]').should('exist');
-    cy.get('[data-react-modals=true]').click(0, 0);
-    cy.get('[data-react-modals=true]').should('not.exist');
+    cy.get(createOrderButtonSelector).click();
+    cy.get(reactModalsSelector).should('exist').contains('123');
+    cy.get(reactModalsSelector).click();
+    cy.get(reactModalsSelector).should('exist');
+    cy.get(reactModalsSelector).click(0, 0);
+    cy.get(reactModalsSelector).should('not.exist');
 
     cy.get(`[data-ingredient-id=${bunId}]`).trigger('dragstart');
     cy.get('[data-constructor=true]').trigger('drop');
 
-    cy.get('[data-button="createOrder"]').click();
+    cy.get(createOrderButtonSelector).click();
     cy.get('[data-button="closeModal"]').click();
-    cy.get('[data-react-modals=true]').should('not.exist');
+    cy.get(reactModalsSelector).should('not.exist');
   })
 });

@@ -1,3 +1,4 @@
+import { user } from "./constants";
 import { getUserThunk, initialState, loginThunk, logoutThunk, registerThunk, sendPasswordResetCodeThunk, updateUserThunk, userSlice } from "./user";
 
 describe("user reducer", () => {
@@ -32,7 +33,6 @@ describe("user reducer", () => {
     });
 
     it("get user fulfilled", () => {
-        const user = { email: "test", name: "test" };
         const action = { type: getUserThunk.fulfilled.type, payload: user };
         const state = userSlice.reducer({...initialState, userRequest: true }, action);
         expect(state).toEqual({...initialState, userRequest: false, user });
@@ -40,7 +40,7 @@ describe("user reducer", () => {
 
     it("get user rejected", () => {
         const action = { type: getUserThunk.rejected.type };
-        const state = userSlice.reducer({...initialState, userRequest: true, user: { email: "test", name: "test" }}, action);
+        const state = userSlice.reducer({...initialState, userRequest: true, user }, action);
         expect(state).toEqual({...initialState, userRequest: false, user: null });
     });
 
@@ -51,7 +51,6 @@ describe("user reducer", () => {
     });
 
     it("update user fulfilled", () => {
-        const user = { email: "test", name: "test" };
         const action = { type: updateUserThunk.fulfilled.type, payload: user };
         const state = userSlice.reducer(initialState, action);
         expect(state).toEqual({...initialState, user });
@@ -59,18 +58,17 @@ describe("user reducer", () => {
 
     it("update user rejected", () => {
         const action = { type: updateUserThunk.rejected.type };
-        const state = userSlice.reducer({...initialState, user: { email: "test", name: "test" }}, action);
+        const state = userSlice.reducer({...initialState, user }, action);
         expect(state).toEqual({...initialState, user: null });
     });
 
     it("login pending", () => {
         const action = { type: loginThunk.pending.type };
-        const state = userSlice.reducer({...initialState, canResetPassword: true, token: "test", user: { email: "test", name: "test" } }, action);
+        const state = userSlice.reducer({...initialState, canResetPassword: true, token: "test", user }, action);
         expect(state).toEqual({...initialState, canResetPassword: false, token: null, user: null, });
     });
 
     it("login fulfilled", () => {
-        const user = { email: "test", name: "test" };
         const action = { type: loginThunk.fulfilled.type, payload: user };
         const state = userSlice.reducer(initialState, action);
         expect(state).toEqual({...initialState, user });
@@ -78,18 +76,17 @@ describe("user reducer", () => {
 
     it("login rejected", () => {
         const action = { type: loginThunk.rejected.type };
-        const state = userSlice.reducer({...initialState, user: { email: "test", name: "test" }}, action);
+        const state = userSlice.reducer({...initialState, user }, action);
         expect(state).toEqual({...initialState, user: null });
     });
 
     it("register pending", () => {
         const action = { type: registerThunk.pending.type };
-        const state = userSlice.reducer({...initialState, canResetPassword: true, token: "test", user: { email: "test", name: "test" } }, action);
+        const state = userSlice.reducer({...initialState, canResetPassword: true, token: "test", user }, action);
         expect(state).toEqual({...initialState, canResetPassword: false, token: null, user: null, });
     });
 
     it("register fulfilled", () => {
-        const user = { email: "test", name: "test" };
         const action = { type: registerThunk.fulfilled.type, payload: user };
         const state = userSlice.reducer(initialState, action);
         expect(state).toEqual({...initialState, user });
@@ -97,13 +94,13 @@ describe("user reducer", () => {
 
     it("register rejected", () => {
         const action = { type: registerThunk.rejected.type };
-        const state = userSlice.reducer({...initialState, user: { email: "test", name: "test" }}, action);
+        const state = userSlice.reducer({...initialState, user }, action);
         expect(state).toEqual({...initialState, user: null });
     });
 
     it("logout pending", () => {
         const action = { type: logoutThunk.pending.type };
-        const state = userSlice.reducer({...initialState, user: { email: "test", name: "test" }, canResetPassword: true}, action);
+        const state = userSlice.reducer({...initialState, user, canResetPassword: true}, action);
         expect(state).toEqual({...initialState, user: null, canResetPassword: false });
     });
 
