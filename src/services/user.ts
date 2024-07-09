@@ -111,7 +111,7 @@ export interface IUserState {
     canResetPassword: boolean,
 }
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
     user: null,
     userRequest: false,
     token: localStorage.getItem('token'),
@@ -189,7 +189,7 @@ export const userSlice = createSlice({
             .addCase(sendPasswordResetCodeThunk.fulfilled, (state) => {
                 state.canResetPassword = true;
             })
-            .addCase(resetPasswordThunk.pending, (state) => {
+            .addCase(sendPasswordResetCodeThunk.rejected, (state) => {
                 state.canResetPassword = false;
             });
     },

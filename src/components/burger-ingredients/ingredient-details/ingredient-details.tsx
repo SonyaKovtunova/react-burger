@@ -8,7 +8,7 @@ type TIngredientDetailsProps = {
 
 const IngredientDetails: FC<TIngredientDetailsProps> = ({ ingredient }) => {
     return (
-        <div className={ingredientDetailsStyles.bodyWrapper}>
+        <div className={ingredientDetailsStyles.bodyWrapper} data-selected-ingredient-id={ingredient._id}>
             <img className={ingredientDetailsStyles.image} src={ingredient.image_large}/>
             <p className="text text_type_main-medium pt-4">{ingredient.name}</p>  
             <div className={`pt-8 ${ingredientDetailsStyles.nutritionValues}`}>

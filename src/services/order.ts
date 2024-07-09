@@ -23,7 +23,7 @@ export interface IOrderState {
     orderFailed: boolean;
 }
 
-const initialState: IOrderState = {
+export const initialState: IOrderState = {
     order: null,
     orderFailed: false,
 }

@@ -18,7 +18,7 @@ export interface IBurgerIngredientsState {
   selectedIngredient: IIngredientData | null,
 }
 
-const initialState: IBurgerIngredientsState = {
+export const initialState: IBurgerIngredientsState = {
   ingredients: [] as IIngredientData[],
   ingredientsRequest: false,
   ingredientsFailed: false,

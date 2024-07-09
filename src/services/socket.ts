@@ -7,7 +7,7 @@ export interface ISocketState {
     orders: IOrders | null;
 }
 
-const initialState: ISocketState = {
+export const initialState: ISocketState = {
     isConnected: false,
     orders: null,
 }

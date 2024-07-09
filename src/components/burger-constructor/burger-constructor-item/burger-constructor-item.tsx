@@ -67,7 +67,7 @@ const BurgerConstructorItem: FC<TBurgerConstructorItemProps> = ({ index = 0, ing
     const itemProps = useMemo<{ ref?: RefObject<HTMLDivElement> | undefined }>(() => isNotBun ? { ref } : {}, [isNotBun]);
 
     return (
-        <div className={burgerConstructorItemStyles.item} {...itemProps}>
+        <div className={burgerConstructorItemStyles.item} {...itemProps} data-contrustor-ingredient-id={ingredient._id}>
             { isNotBun ? <DragIcon type="primary" /> : <div></div> }
             <ConstructorElement 
                 text={ingredient.name} 
